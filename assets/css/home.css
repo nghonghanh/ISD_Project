@@ -44,6 +44,14 @@ body {
     display: none;
   }
   
+  .login-btn {
+    text-decoration: none;
+    background-color: red;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 6px;
+  }
+
   /* ---------- SIDEBAR ---------- */
   
   #sidebar {
