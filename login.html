@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Account</title>
-  <link rel="stylesheet" href="/assets/css/login.css">
+  <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/login.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,19 +12,65 @@
 </head>
 <body>
   <div class="wrapper">
-    <form action="">
-      <img id="logo" src="/assets/img/izone-logo-color.png" alt="">
-      <h1>Log in to your account</h1>
-      <div class="input-box">
-        <input type="text" placeholder="Username" required>
-        <i class='bx bxs-user'></i>
-      </div>
-      <div class="input-box">
-        <input type="password" placeholder="Password" required>
-        <i class='bx bxs-lock-alt' ></i>
-      </div>
-      <button type="submit" class="btn">Log in</button>
+    <img id="logo" src="assets/img/izone-logo-color.png" alt="">
+    <h1>Log in to your account</h1>
+    <form action="assets/php/login.php" method="post" id="loginForm">
+        <div class="input-box">
+            <input type="text" name="username" placeholder="Username" required>
+            <i class='bx bxs-user'></i>
+          </div>
+          <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required>
+            <i class='bx bxs-lock-alt' ></i>
+          </div>
+          <button type="submit" class="btn">Login</button>
+        <p class="error" style="display: none;"></p>
     </form>
   </div>
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorElement = form.querySelector('.error');
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const username = form.querySelector('input[name="username"]').value;
+        const password = form.querySelector('input[name="password"]').value;
+
+        // Gọi hàm so sánh login
+        compareLogin(username, password);
+    });
+
+    function compareLogin(username, password) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "assets/php/login.php");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    window.location.href = "home.html";
+                } else {
+                    switch(response.error) {
+                        case 'incorrect_username':
+                            errorElement.textContent = "Username not found. Please try again.";
+                            break;
+                        case 'incorrect_password':
+                            errorElement.textContent = "Incorrect password. Please try again.";
+                            break;
+                        default:
+                            errorElement.textContent = "Login faild!";
+                    }
+                    errorElement.style.display = 'block';
+                }
+            } else {
+                console.error("Cannot connect to server!");
+            }
+        };
+        
+        xhr.send(`username=${username}&password=${password}`);
+    }
+</script>
 </body>
 </html>
