@@ -1,106 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>IZONE Institute</title>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/assets/css/home.css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="topbar">
-        <div class="logo">
-          <a href="/home.html"><img id="logo" src="/assets/img/izone-logo-color.png" alt="logo"></a>
-        </div>
-        <div class="login-btn"></div>
-          <a href="/home.html" class="btn">Log out</a>
-        </div>
-      </div>
-      <div class="sidebar">
-        <ul>
-          <li>
-            <a href="">
-              <div>STUDENT</div>
-            </a>
-          </li>
-          <li>
-            <a href="">
-              <div>PERFORMANCE</div>
-            </a>
-          </li>
-          <li>
-            <a href="">
-              <div>CLASS</div>
-            </a>
-          </li>
-          <li>
-            <a href="/admin.html">
-              <div>ADMIN</div>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="main">
-        <div class="main-title">
-          <h2>Account Information</h2>
-        </div>
-        <div class="main-title">
-          <form action="">
-            <div class="column">
-              <div class="input-box">
-                <label>Name</label>
-                <input type="text" placeholder="Dinh Minh Hien">
-              </div>
-              <div class="input-box"></div>
-            </div>
-            
-            <div class="column">
-              <div class="input-box">
-                <label>Username</label>
-                <input type="text" placeholder="hienizone">
-              </div>
-              <div class="input-box">
-                <label>Password</label>
-                <input type="text" placeholder="1234">
-              </div>
-            </div>
-            <div class="column">
-              <button type="submit" class="change-btn" onclick="openPopup()">Change password</button>
-              <div class="popup">
-                <h2>Change password</h2>
-                <div class="change-form">
-                  <form action="">
-                    <div class="input-box">
-                      <label>Old Password</label>
-                      <input type="text" placeholder="1234">
-                    </div>
-                    <div class="input-box">
-                      <label>New Password</label>
-                      <input type="text" placeholder="H1234">
-                    </div>
-                    <div class="input-box">
-                      <label>Confirm New Password</label>
-                      <input type="text" placeholder="H1234">
-                    </div>
-                  <div class="column">
-                    <div class="input-box">
-                      <button type="submit" class="save-btn" onclick="closePopup()">Save</button>
-                    </div>
-                    <div class="input-box">
-                      <button type="submit" class="save-btn cancel-btn" onclick="closePopup()">Cancel</button>
-                    </div>
-                  </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IZONE Institute</title>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="logo">
+      <a href="home.html"><img id="logo" src="assets/img/izone-logo-color.png" alt="logo"></a>
     </div>
-    
-  </body>
+    <div class="login-btn"></div>
+    <a href="login.html" class="btn">Log out</a>
+    </div>
+  </div>
+  <div class="sidebar">
+    <ul>
+      <li>
+        <a href="">
+          <div>STUDENT</div>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <div>PERFORMANCE</div>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <div>CLASS</div>
+        </a>
+      </li>
+      <li>
+        <a href="admin.html">
+          <div>ADMIN</div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="main">
+    <div class="main-title">
+      <h2>Account Information</h2>
+    </div>
+    <div class="main-title">
+      <form action="">
+        <div class="column">
+          <div class="input-box">
+            <label>Name</label>
+            <input type="text" id="nameInput" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box"></div>
+        </div>
+        
+        <div class="column">
+          <div class="input-box">
+            <label>Username</label>
+            <input type="text" id="usernameInput" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box">
+            <label>Password</label>
+            <input type="text" id="passwordInput" placeholder="Loading..." readonly>
+          </div>
+        </div>
+        <div class="column">
+          <div class="change-btn">Change password</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Script to fetch data from admin.php and populate inputs -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    fetch('assets/php/admin.php')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('nameInput').value = data.name;
+        document.getElementById('usernameInput').value = data.username;
+        document.getElementById('passwordInput').value = data.password;
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  });
+</script>
+
+</body>
 </html>
 <script>
       let popup = document.getElementById("popup");
