@@ -67,11 +67,54 @@
         </div>
         <div class="column">
           <div class="change-btn">Change password</div>
+          <p class="error" style="display: none;"></p>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<!-- Popup -->
+<div id="popup" class="popup" style="display: none;">
+  <h2>Change Password</h2>
+  <form id="changePasswordForm">
+    <div class="input-box">
+      <label for="oldPassword">Old Password</label>
+      <input type="password" id="oldPassword" name="oldPassword" required>
+    </div>
+    <div class="input-box">
+      <label for="newPassword">New Password</label>
+      <input type="password" id="newPassword" name="newPassword" required>
+    </div>
+    <div class="input-box">
+      <label for="confirmPassword">Confirm New Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+    </div>
+    <div class="input-box">
+      <input type="submit" class="save-btn" value="Save">
+      <button type="button" class="cancel-btn">Cancel</button>
+    </div>
+    <div class="error" id="passwordError" style="display: none;"></div>
+  </form>
+</div>
+<!-- End Popup -->
+
+<!-- Script for Popup -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const changePasswordBtn = document.querySelector(".change-btn");
+    const popup = document.getElementById("popup");
+    const cancelButton = document.querySelector(".cancel-btn");
+
+    changePasswordBtn.addEventListener("click", function() {
+      popup.style.display = "block";
+    });
+
+    cancelButton.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+  });
+</script>
 
 <!-- Script to fetch data from admin.php and populate inputs -->
 <script>
@@ -87,14 +130,40 @@
   });
 </script>
 
+<!-- Script for Change Password Form -->
+<script>
+  document.getElementById("changePasswordForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    let oldPassword = document.getElementById("oldPassword").value;
+    let newPassword = document.getElementById("newPassword").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    fetch('assets/php/changepass.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // If password changed successfully
+        popup.style.display = "none";
+        alert(data.message);
+      } else {
+        // If there is an error, display error message
+        document.getElementById("passwordError").textContent = data.error;
+        document.getElementById("passwordError").style.display = "block";
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+</script>
+
 </body>
 </html>
-<script>
-      let popup = document.getElementById("popup");
-      function openPopup() {
-        popup.classList.add("open-popup");
-      }
-      function closePopup() {
-        popup.classList.remove("open-popup");
-      }
-</script>
