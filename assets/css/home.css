@@ -181,6 +181,34 @@
   cursor: pointer;
 }
 
+.student-table {
+  width: calc(100% + 300px); /* Kéo dài chiều ngang của bảng */
+  margin-right: 20px; /* Tạo khoảng cách 20px giữa bảng và sidebar */
+  bottom: 0; /* Bảng luôn nằm ở phía dưới cùng */
+  border-collapse: collapse;
+}
+
+.student-table th,
+.student-table td {
+  padding: 12px;
+  text-align: center; /* Căn giữa nội dung trong các ô */
+  border: 1px solid #dddddd;
+}
+
+.student-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.student-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.student-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Button styles */
 .setnamehere-btn {
   font-size: 14px;
   font-weight: 500;

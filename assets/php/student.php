@@ -13,8 +13,20 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Chuẩn bị câu truy vấn
+// Chuẩn bị câu truy vấn mặc định (lấy toàn bộ danh sách sinh viên)
 $sql = "SELECT * FROM student";
+
+// Kiểm tra nếu có dữ liệu tìm kiếm được gửi từ client
+if (isset($_GET['search'])) {
+    // Lấy thông tin tìm kiếm từ client
+    $search = $_GET['search'];
+
+    // Nếu thông tin tìm kiếm không rỗng
+    if (!empty($search)) {
+        // Tạo điều kiện tìm kiếm dựa trên tên sinh viên
+        $sql = "SELECT * FROM student WHERE LOWER(StudentName) LIKE '%$search%' OR LOWER(StudentEmail) LIKE '%$search%'"; 
+    }
+}
 
 // Thực hiện truy vấn
 $result = $conn->query($sql);

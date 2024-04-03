@@ -6,6 +6,28 @@
 <title>IZONE Institute</title>
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+<style>
+/* CSS cho thanh tìm kiếm */
+.search-bar {
+  float: right;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.search-btn {
+  background-color: #008CBA;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -41,6 +63,13 @@
     </ul>
   </div>
   <div class="main">
+    <!-- Thanh tìm kiếm -->
+    <div class="search-bar">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+      <button class="search-btn" id="searchBtn">Search</button>
+    </div>
+    
+    <!-- Bảng danh sách học sinh -->
     <table class="student-table" id="studentData">
       <thead>
         <tr>
@@ -62,29 +91,55 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Gửi yêu cầu lấy dữ liệu sinh viên từ student.php
-  fetch('assets/php/student.php')
-    .then(response => response.json())
-    .then(data => {
-      const studentTable = document.getElementById('studentData');
+  const searchBtn = document.getElementById('searchBtn');
 
-      // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
-      data.forEach(student => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${student.StudentID}</td>
-          <td>${student.StudentName}</td>
-          <td>${student.PhoneNumber}</td>
-          <td>${student.StudentEmail}</td>
-          <td><button class="setnamehere-btn edit-btn">Edit</button></td>
-          <td><button class="setnamehere-btn delete-btn">Delete</button></td>
-        `;
+  // Gắn sự kiện khi nhấn Enter trong ô tìm kiếm
+  document.getElementById('searchInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      searchStudents();
+    }
+  });
 
-        // Thêm hàng vào bảng
-        studentTable.appendChild(row);
-      });
-    })
-    .catch(error => console.error('Error fetching student data:', error));
+  // Gắn sự kiện click vào nút tìm kiếm
+  searchBtn.addEventListener('click', function() {
+    searchStudents();
+  });
+
+  // Hàm tìm kiếm học sinh
+  function searchStudents() {
+    const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    // Gửi yêu cầu tìm kiếm đến server
+    fetch(`assets/php/student.php?search=${searchInput}`)
+      .then(response => response.json())
+      .then(data => {
+        const studentTable = document.getElementById('studentData');
+        const tbody = studentTable.querySelector('tbody');
+
+        // Xóa dữ liệu cũ trong bảng
+        tbody.innerHTML = '';
+
+        // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
+        data.forEach(student => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${student.StudentID}</td>
+            <td>${student.StudentName}</td>
+            <td>${student.PhoneNumber}</td>
+            <td>${student.StudentEmail}</td>
+            <td><button class="setnamehere-btn edit-btn">Edit</button></td>
+            <td><button class="setnamehere-btn delete-btn">Delete</button></td>
+          `;
+
+          // Thêm hàng vào bảng
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Error fetching student data:', error));
+  }
+
+  // Khi trang tải lần đầu, hiển thị toàn bộ danh sách học sinh
+  searchStudents();
 });
 </script>
 
