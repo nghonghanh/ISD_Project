@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IZONE Institute</title>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="logo">
+      <a href="home.html"><img id="logo" src="assets/img/izone-logo-color.png" alt="logo"></a>
+    </div>
+    <div class="login-btn"></div>
+    <a href="index.html" class="btn">Log out</a>
+  </div>
+  <div class="sidebar">
+    <ul>
+      <li>
+        <a href="student.html">
+          <div>STUDENT</div>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <div>PERFORMANCE</div>
+        </a>
+      </li>
+      <li>
+        <a href="">
+          <div>CLASS</div>
+        </a>
+      </li>
+      <li>
+        <a href="admin.html">
+          <div>ADMIN</div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="main">
+    <table class="student-table" id="studentData">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Student Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dữ liệu sinh viên sẽ được thêm vào đây bằng JavaScript -->
+      </tbody>
+    </table>
+    <button class="setnamehere-btn add-btn">Add Student</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Gửi yêu cầu lấy dữ liệu sinh viên từ student.php
+  fetch('assets/php/student.php')
+    .then(response => response.json())
+    .then(data => {
+      const studentTable = document.getElementById('studentData');
+
+      // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
+      data.forEach(student => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${student.StudentID}</td>
+          <td>${student.StudentName}</td>
+          <td>${student.PhoneNumber}</td>
+          <td>${student.StudentEmail}</td>
+          <td><button class="setnamehere-btn edit-btn">Edit</button></td>
+          <td><button class="setnamehere-btn delete-btn">Delete</button></td>
+        `;
+
+        // Thêm hàng vào bảng
+        studentTable.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error fetching student data:', error));
+});
+</script>
+
+</body>
+</html>

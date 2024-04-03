@@ -31,6 +31,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    //Kiểm tra mật khẩu cũ và mật khẩu mới 
+    if ($oldPassword == $newPassword) {
+        echo json_encode(array("success" => false, "error" => "Old password and New password is the same"));
+        $conn->close();
+        exit();
+    }
+
     // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
     if ($newPassword !== $confirmPassword) {
         echo json_encode(array("success" => false, "error" => "New password and confirm password do not match"));

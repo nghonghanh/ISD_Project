@@ -180,3 +180,22 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.setnamehere-btn {
+  font-size: 14px;
+  font-weight: 500;
+  color: black; /* Màu chữ đen */
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid black; /* Đường viền màu đen */
+  background-color: white; /* Nền màu trắng */
+}
+
+.setnamehere-btn.add-btn {
+  margin-top: 20px;
+}
+
+.setnamehere-btn:hover {
+  opacity: 0.8;
+}
