@@ -75,9 +75,10 @@
         <tr>
           <th>Student ID</th>
           <th>Student Name</th>
+          <th>Class ID</th>
           <th>Phone Number</th>
           <th>Email</th>
-          <th></th>
+          <th>Status</th>
           <th></th>
         </tr>
       </thead>
@@ -125,10 +126,11 @@ document.addEventListener("DOMContentLoaded", function() {
           row.innerHTML = `
             <td>${student.StudentID}</td>
             <td>${student.StudentName}</td>
+            <td>${student.ClassID}</td>
             <td>${student.PhoneNumber}</td>
             <td>${student.StudentEmail}</td>
-            <td><button class="setnamehere-btn edit-btn">Edit</button></td>
-            <td><button class="setnamehere-btn delete-btn">Delete</button></td>
+            <td>${student.Status}</td>
+            <td><button class="setnamehere-btn edit-btn">Edit</button> <button class="setnamehere-btn delete-btn">Delete</button></td>
           `;
 
           // Thêm hàng vào bảng
