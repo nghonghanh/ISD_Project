@@ -18,8 +18,8 @@ if (isset($_GET['id'])) {
     // Lấy thông tin StudentID từ client
     $studentId = $_GET['id'];
 
-    // Chuẩn bị câu truy vấn để lấy thông tin sinh viên dựa trên StudentID
-    $sql = "SELECT s.StudentName, s.BirthDate, s.StudentEmail, p.PhoneNumber, p.ParentEmail 
+    // Chuẩn bị câu truy vấn để lấy thông tin sinh viên và thông tin phụ huynh
+    $sql = "SELECT s.StudentName, s.BirthDate, s.PhoneNumber, s.StudentEmail, p.ParentEmail, p.ParentPhoneNumber
             FROM student s
             LEFT JOIN parent p ON s.StudentID = p.StudentID
             WHERE s.StudentID = '$studentId'";
@@ -35,9 +35,10 @@ if (isset($_GET['id'])) {
         $studentInfo = array(
             'StudentName' => $row['StudentName'],
             'BirthDate' => $row['BirthDate'],
-            'StudentEmail' => $row['StudentEmail'],
             'PhoneNumber' => $row['PhoneNumber'],
-            'ParentEmail' => $row['ParentEmail']
+            'StudentEmail' => $row['StudentEmail'],
+            'ParentEmail' => $row['ParentEmail'],
+            'ParentPhoneNumber' => $row['ParentPhoneNumber']
         );
 
         // Thiết lập header cho phản hồi là JSON

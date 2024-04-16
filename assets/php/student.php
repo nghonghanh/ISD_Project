@@ -59,10 +59,11 @@ foreach ($students as $student_id => $student_data) {
             $processed_students[] = array(
                 'StudentID' => '',
                 'StudentName' => '',
-                'PhoneNumber' => '',
-                'StudentEmail' => '',
+                'PhoneNumber' => $data['PhoneNumber'],
+                'StudentEmail' => $data['StudentEmail'],
                 'ClassID' => $data['ClassID'],
-                'Status' => $data['Status']
+                'Status' => $data['Status'],
+                'Function' => '',
             );
         }
     }
