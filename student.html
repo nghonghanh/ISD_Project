@@ -7,143 +7,284 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
 <style>
-/* CSS cho thanh tìm kiếm */
-.search-bar {
-  float: right;
-  margin-bottom: 20px;
-}
-
-.search-input {
-  padding: 8px;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
-.search-btn {
-  background-color: #008CBA;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-</style>
+  .main {
+    height: auto;
+    width: calc(100% - 260px);
+  }
+  
+  .input-box label {
+    font-weight: 600;
+  }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="topbar">
-    <div class="logo">
-      <a href="home.html"><img id="logo" src="assets/img/izone-logo-color.png" alt="logo"></a>
+  <div class="container">
+    <div class="topbar">
+      <div class="logo">
+        <a href="home.html"><img id="logo" src="assets/img/izone-logo-color.png" alt="logo"></a>
+      </div>
+      <div class="login-btn"></div>
+      <a href="index.html" class="btn">Log out</a>
     </div>
-    <div class="login-btn"></div>
-    <a href="index.html" class="btn">Log out</a>
-  </div>
-  <div class="sidebar">
-    <ul>
-      <li>
-        <a href="student.html">
-          <div>STUDENT</div>
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <div>PERFORMANCE</div>
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <div>CLASS</div>
-        </a>
-      </li>
-      <li>
-        <a href="admin.html">
-          <div>ADMIN</div>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="main">
-    <!-- Thanh tìm kiếm -->
-    <div class="search-bar">
-      <input type="text" class="search-input" id="searchInput" placeholder="Search...">
-      <button class="search-btn" id="searchBtn">Search</button>
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="student.html">
+            <div>STUDENT</div>
+          </a>
+        </li>
+        <li>
+          <a href="performance.html">
+            <div>PERFORMANCE</div>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div>CLASS</div>
+          </a>
+        </li>
+        <li>
+          <a href="admin.html">
+            <div>ADMIN</div>
+          </a>
+        </li>
+      </ul>
     </div>
-    
+    <div class="main">
+
+      <!-- Thanh tìm kiếm -->
+      <div class="st-title">
+        <div class="header">
+          <h2>Student List</h2>
+          <div class="box">
+            <button type="button" class="search-btn add-btn">Add</button>
+            
+            <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+            
+          </div>
+        </div>
+
     <!-- Bảng danh sách học sinh -->
+     
     <table class="student-table" id="studentData">
       <thead>
-        <tr>
-          <th>Student ID</th>
-          <th>Student Name</th>
-          <th>Class ID</th>
-          <th>Phone Number</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
+      <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Class ID</th>
+        <th>Phone Number</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Function</th>
+      </tr>
       </thead>
       <tbody>
-        <!-- Dữ liệu sinh viên sẽ được thêm vào đây bằng JavaScript -->
+      <!-- Dữ liệu sinh viên sẽ được thêm vào đây bằng JavaScript -->
       </tbody>
-    </table>
-    <button class="setnamehere-btn add-btn">Add Student</button>
+    </table>  
   </div>
 </div>
+</div>
+  
+  <!-- Popup for editing student information -->
+<div id="open-popup" class="open-popup">
+  <div class="popup-title">
+  <h2>Student Information</h2>
+  <p class="close-menu">X</p>
+  </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const searchBtn = document.getElementById('searchBtn');
+  <div class="st-container">
+    <div class="st-box">
+      <h3 class="box-content">Contact Information</h3>
+      <div class="st-form">
+        <form action="">
+          <div class="column">
+            <div class="input-box">
+              <label>Student Name</label>
+              <input type="text" id="editStudentName" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box">
+              <label>Date Of Birth</label>
+              <input type="text" id="editDOB" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box">
+              <label>Phone</label>
+              <input type="text" id="editPhone" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box">
+              <label>Email</label>
+              <input type="text" id="editEmail" placeholder="Loading..." readonly>
+            </div>
+          </div>
 
-  // Gắn sự kiện khi nhấn Enter trong ô tìm kiếm
-  document.getElementById('searchInput').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-      searchStudents();
+          <div class="column">
+            <div class="input-box">
+              <label>Parent Phone</label>
+              <input type="text" id="editParentPhone" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box">
+              <label>Parent Email</label>
+              <input type="text" id="editParentEmail" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box"></div>
+            <div class="input-box"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+   <div class="st-box">
+    <h3 class="box-content">Study Information</h3>
+    <div class="st-form">
+      <form action="">
+        <div class="column">
+          <div class="input-box">
+            <label>Student ID</label>
+            <input type="text" id="editStudentID" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box">
+            <label>Class ID 1</label>
+            <input type="text" id="nameInput" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box">
+            <label>Class ID 2</label>
+            <input type="text" id="nameInput" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box">
+            <label>Class ID 3</label>
+            <input type="text" id="nameInput" placeholder="Loading..." readonly>
+          </div>
+          <div class="input-box">
+            <label>Class ID 4</label>
+            <input type="text" id="nameInput" placeholder="Loading..." readonly>
+          </div>
+        </div>
+      </form>
+    </div>
+   </div>
+   
+    <div class="column">
+      <div class="change-btn">Save changes</div>
+    </div>
+   
+  </div>
+</div>
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // Khi trang tải lần đầu, hiển thị toàn bộ danh sách học sinh
+        searchStudents();
+
+    const searchBtn = document.getElementById('searchBtn');
+  
+    // Gắn sự kiện khi nhấn Enter trong ô tìm kiếm
+    document.getElementById('searchInput').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        searchStudents();
+      }
+    });
+  
+    // Hàm tìm kiếm học sinh
+    function searchStudents() {
+      const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+  
+      // Gửi yêu cầu tìm kiếm đến server
+      fetch(`assets/php/student.php?search=${searchInput}`)
+        .then(response => response.json())
+        .then(data => {
+          const studentTable = document.getElementById('studentData');
+          const tbody = studentTable.querySelector('tbody');
+  
+          // Xóa dữ liệu cũ trong bảng
+          tbody.innerHTML = '';
+  
+          // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
+          data.forEach(student => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${student.StudentID}</td>
+              <td>${student.StudentName}</td>
+              <td>${student.ClassID}</td>
+              <td>${student.PhoneNumber}</td>
+              <td>${student.StudentEmail}</td>
+              <td>${student.Status}</td>
+              <td>
+                <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
+                <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
+              </td>
+            `;
+  
+            // Thêm hàng vào bảng
+            tbody.appendChild(row);
+          });
+  
+          // Gắn sự kiện cho nút Edit mới tạo
+          attachEditEventListeners();
+        })
+        .catch(error => console.error('Error fetching student data:', error));
     }
-  });
+  
+    // Popup functionality for Edit button
+    function attachEditEventListeners() {
+    const editButtons = document.querySelectorAll(".edit-btn");
+    const editPopup = document.getElementById("open-popup");
+    const cancelEditButton = editPopup.querySelector(".close-menu");
 
-  // Gắn sự kiện click vào nút tìm kiếm
-  searchBtn.addEventListener('click', function() {
-    searchStudents();
-  });
+    if (!editPopup) {
+        console.error("Popup element not found. Check if the selector is correct.");
+        return;
+    }
 
-  // Hàm tìm kiếm học sinh
-  function searchStudents() {
-    const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!cancelEditButton) {
+        console.error("Close button for popup not found. Check if the selector is correct.");
+        return;
+    }
 
-    // Gửi yêu cầu tìm kiếm đến server
-    fetch(`assets/php/student.php?search=${searchInput}`)
-      .then(response => response.json())
-      .then(data => {
-        const studentTable = document.getElementById('studentData');
-        const tbody = studentTable.querySelector('tbody');
+    editButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            const studentId = this.getAttribute("data-studentid");
 
-        // Xóa dữ liệu cũ trong bảng
-        tbody.innerHTML = '';
+            // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
+            fetch(`assets/php/studentinfor.php?id=${studentId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Kiểm tra dữ liệu có được trả về không
+                    console.log("Data received from server:", data);
 
-        // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
-        data.forEach(student => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${student.StudentID}</td>
-            <td>${student.StudentName}</td>
-            <td>${student.ClassID}</td>
-            <td>${student.PhoneNumber}</td>
-            <td>${student.StudentEmail}</td>
-            <td>${student.Status}</td>
-            <td><button class="setnamehere-btn edit-btn">Edit</button> <button class="setnamehere-btn delete-btn">Delete</button></td>
-          `;
-
-          // Thêm hàng vào bảng
-          tbody.appendChild(row);
+                    document.getElementById('editStudentName').value = data.StudentName;
+                    document.getElementById('editDOB').value = data.DateOfBirth;
+                    document.getElementById('editPhone').value = data.PhoneNumber;
+                    document.getElementById('editEmail').value = data.StudentEmail;
+                    document.getElementById('editParentPhone').value = data.ParentPhone;
+                    document.getElementById('editParentEmail').value = data.ParentEmail;
+                    document.getElementById('editStudentID').value = studentId;
+                    document.getElementById('editClass1').value = data.ClassID[0];
+                    document.getElementById('editClass2').value = data.ClassID[1];
+                    document.getElementById('editClass3').value = data.ClassID[2];
+                    document.getElementById('editClass4').value = data.ClassID[3];
+                })
+                .catch(error => {
+                    console.error('Error fetching student data:', error);
+                });
+            
+            editPopup.style.display = "block";
         });
-      })
-      .catch(error => console.error('Error fetching student data:', error));
-  }
+    });
 
-  // Khi trang tải lần đầu, hiển thị toàn bộ danh sách học sinh
-  searchStudents();
-});
-</script>
+    // Sự kiện cho nút đóng popup
+    cancelEditButton.addEventListener("click", function() {
+        editPopup.style.display = "none";
+    });
+}
 
-</body>
-</html>
+  });
+  </script>
+  
+  </body>
+  </html>

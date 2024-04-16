@@ -139,12 +139,11 @@
   top: 20%;
   left: 50%;
   padding: 30px 30px;
- 
   transition: transform 0.4s, top 0.4s;
 }
 
 .popup h2 {
-  font-size: 20px;
+  font-size: 20px; 
 }
 
 .input-box label {
@@ -166,12 +165,12 @@
   border-radius: 5px;
   cursor: pointer;
   border:rgb(219, 8, 41);
+  width: 50%;
 }
 
 .input-box .cancel-btn {
   font-size: 14px;
-  font-weight: 500;
-  width: 100%;
+  font-weight: 500; 
   height: 30px;
   border: none;
   outline: none;
@@ -181,24 +180,62 @@
   cursor: pointer;
 }
 
+
+/*css student page*/
 .student-table {
-  width: calc(100% + 300px); /* Kéo dài chiều ngang của bảng */
-  margin-right: 20px; /* Tạo khoảng cách 20px giữa bảng và sidebar */
-  bottom: 0; /* Bảng luôn nằm ở phía dưới cùng */
+  width: 100%; /* Kéo dài chiều ngang của bảng */
   border-collapse: collapse;
+}
+
+.st-title {
+  margin: 30px;
+  background: white;
+  border-radius: 20px;
+  border: 2.5px solid rgba(128, 128, 128, 0.062);
+}
+
+.st-title .header {
+  margin: 20px;
+  left: 0;
+}
+
+.st-title h2 {
+  font-size: 28px;
+  
+}
+
+.st-title .box {
+  
+}
+
+.box .search-btn {
+  padding: 3px 18px;
+  color: white;
+  background-color: #db0829;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.box .search-input {
+  padding: 6px 18px;
+  border-radius: 5px;
+  border: 2px solid #ddddddc6;
 }
 
 .student-table th,
 .student-table td {
-  padding: 12px;
+  padding: 20px;
   text-align: center; /* Căn giữa nội dung trong các ô */
-  border: 1px solid #dddddd;
+  border: 1.5px solid #ddddddc6;
 }
 
 .student-table th {
   background-color: #f2f2f2;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 14px;
 }
+
 
 .student-table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
@@ -208,23 +245,69 @@
   background-color: #f2f2f2;
 }
 
-/* Button styles */
-.setnamehere-btn {
-  font-size: 14px;
-  font-weight: 500;
-  color: black; /* Màu chữ đen */
-  padding: 8px 15px;
-  border-radius: 5px;
+.open-popup {
+  position: fixed;
+  top: 0%;
+  color: #333;
+  display: none;
+  left: 290px;
+  background-color: rgb(220, 220, 220);
+  height: 100%;
+}
+
+.open-popup .h2 {
+  
+  font-size: 16px;
+}
+
+.open-popup p {
   cursor: pointer;
-  border: 1px solid black; /* Đường viền màu đen */
-  background-color: white; /* Nền màu trắng */
+  font-size: 20px;
+  font-weight: 300;
+  color: gray;
 }
 
-.setnamehere-btn.add-btn {
-  margin-top: 20px;
+.popup-title {
+  margin: 34px 34px;
+  
 }
 
-.setnamehere-btn:hover {
-  opacity: 0.8;
+.st-container {
+  margin: 34px 34px;
+
 }
 
+.st-box {
+  border: 2.5px solid rgba(128, 128, 128, 0.062);
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.st-box .box-content {
+  padding: 17px 17px 0 17px;
+  font-size: 16px;
+}
+
+.st-form {
+  padding: 0 17px 17px 17px;
+}
+
+.per-button {
+  text-align: center;
+  
+}
+
+.select-btn {
+  margin: 8px 3px;
+  padding: 8px 13px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(128, 128, 128, 0.062);
+  font-weight: 600;
+  color: #707070;
+  cursor: pointer;
+}
+
+.select-btn:hover {
+  color: #db0829;
+}
