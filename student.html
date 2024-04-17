@@ -133,11 +133,31 @@
             <div class="column">
               <div class="input-box">
                 <label for="editStudentID">Student ID</label>
-                <input type="number" id="editStudentID" name="editStudentID" placeholder="Loading..."readonly>
+                <input type="number" id="editStudentID" name="editStudentID" placeholder="Loading..." readonly>
               </div>
               <div class="input-box">
-                <label for="editClassID">Class ID</label>
-                <input type="text" id="editClassID" name="editClassID" placeholder="Loading...">
+                <label for="editClassID1">Class ID 1</label>
+                <input type="text" id="editClassID1" name="editClassID1" placeholder="Loading...">
+                <label for="editStatus1">Status</label>
+                <input type="text" id="editStatus1" name="editStatus1" placeholder="Loading...">
+              </div>
+              <div class="input-box">
+                <label for="editClassID2">Class ID 2</label>
+                <input type="text" id="editClassID2" name="editClassID2" placeholder="Loading...">
+                <label for="editStatus2">Status</label>
+                <input type="text" id="editStatus2" name="editStatus2" placeholder="Loading...">
+              </div>
+              <div class="input-box">
+                <label for="editClassID3">Class ID 3</label>
+                <input type="text" id="editClassID3" name="editClassID3" placeholder="Loading...">
+                <label for="editStatus3">Status</label>
+                <input type="text" id="editStatus3" name="editStatus3" placeholder="Loading...">
+              </div>
+              <div class="input-box">
+                <label for="editClassID4">Class ID 4</label>
+                <input type="text" id="editClassID4" name="editClassID4" placeholder="Loading...">
+                <label for="editStatus4">Status</label>
+                <input type="text" id="editStatus4" name="editStatus4" placeholder="Loading...">
               </div>
             </div>
           </form>
@@ -227,37 +247,70 @@
         }
 
         editButtons.forEach(button => {
-            button.addEventListener("click", function() {
-                const studentId = this.getAttribute("data-studentid");
+    button.addEventListener("click", function() {
+        const studentId = this.getAttribute("data-studentid");
 
-                // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
-                fetch(`assets/php/studentinfor.php?id=${studentId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Kiểm tra dữ liệu có được trả về không
-                        console.log("Data received from server:", data);
+        // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
+        fetch(`assets/php/studentinfor.php?id=${studentId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Kiểm tra dữ liệu có được trả về không
+                console.log("Data received from server:", data);
 
-                        // Đổ dữ liệu vào form chỉnh sửa
-                        document.getElementById('editStudentName').value = data.StudentName;
-                        document.getElementById('editDOB').value = data.BirthDate;
-                        document.getElementById('editPhone').value = data.PhoneNumber;
-                        document.getElementById('editEmail').value = data.StudentEmail;
-                        document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
-                        document.getElementById('editParentEmail').value = data.ParentEmail;
-                        document.getElementById('editStudentID').value = studentId;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching student data:', error);
-                    });
-                
-                editPopup.style.display = "block";
+                // Đổ dữ liệu vào form chỉnh sửa
+                document.getElementById('editStudentName').value = data.StudentName;
+                document.getElementById('editDOB').value = data.BirthDate;
+                document.getElementById('editPhone').value = data.PhoneNumber;
+                document.getElementById('editEmail').value = data.StudentEmail;
+                document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
+                document.getElementById('editParentEmail').value = data.ParentEmail;
+                document.getElementById('editStudentID').value = studentId;
+
+// Kiểm tra xem có thông tin ClassID và Status được trả về không và gán giá trị cho các trường tương ứng
+if (data.ClassID1 !== undefined && data.Status1 !== undefined) {
+    document.getElementById('editClassID1').value = data.ClassID1;
+    document.getElementById('editStatus1').value = data.Status1;
+} else {
+    document.getElementById('editClassID1').value = '';
+    document.getElementById('editStatus1').value = '';
+}
+
+if (data.ClassID2 !== undefined && data.Status2 !== undefined) {
+    document.getElementById('editClassID2').value = data.ClassID2;
+    document.getElementById('editStatus2').value = data.Status2;
+} else {
+    document.getElementById('editClassID2').value = '';
+    document.getElementById('editStatus2').value = '';
+}
+
+if (data.ClassID3 !== undefined && data.Status3 !== undefined) {
+    document.getElementById('editClassID3').value = data.ClassID3;
+    document.getElementById('editStatus3').value = data.Status3;
+} else {
+    document.getElementById('editClassID3').value = '';
+    document.getElementById('editStatus3').value = '';
+}
+
+if (data.ClassID4 !== undefined && data.Status4 !== undefined) {
+    document.getElementById('editClassID4').value = data.ClassID4;
+    document.getElementById('editStatus4').value = data.Status4;
+} else {
+    document.getElementById('editClassID4').value = '';
+    document.getElementById('editStatus4').value = '';
+}
+                // Hiển thị popup chỉnh sửa
+                document.getElementById('open-popup').style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error fetching student data:', error);
             });
-        });
+    });
+});
 
         // Sự kiện cho nút đóng popup
         cancelEditButton.addEventListener("click", function() {
