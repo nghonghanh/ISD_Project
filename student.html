@@ -169,6 +169,93 @@
       </div>
     </div>
   </div>
+
+    <!-- Popup for adding student information -->
+    <div id="open-popup-add" class="open-popup">
+      <div class="popup-title">
+        <h2>Student Information</h2>
+        <p class="close-add-menu">X</p>
+      </div>
+  
+      <div class="st-container">
+        <div class="st-box">
+          <h3 class="box-content">Contact Information</h3>
+          <div class="st-form">
+            <form id="addForm">
+              <div class="column">
+                <div class="input-box">
+                  <label for="addStudentName">Student Name</label>
+                  <input type="text" id="addStudentName" name="addStudentName" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addDOB">Date Of Birth</label>
+                  <input type="date" id="addDOB" name="addDOB" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addPhone">Phone</label>
+                  <input type="tel" id="addPhone" name="addPhone" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addEmail">Email</label>
+                  <input type="email" id="addEmail" name="addEmail" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addParentPhone">Parent Phone</label>
+                  <input type="tel" id="addParentPhone" name="addParentPhone" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addParentEmail">Parent Email</label>
+                  <input type="email" id="addParentEmail" name="addParentEmail" placeholder="Input here...">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+        <div class="st-box">
+          <h3 class="box-content">Study Information</h3>
+          <div class="st-form">
+            <form id="addStudyForm">
+              <div class="column">
+                <div class="input-box">
+                  <label for="addStudentID">Student ID</label>
+                  <input type="number" id="addStudentID" name="addStudentID" placeholder="Auto generate..." readonly>
+                </div>
+                <div class="input-box">
+                  <label for="addClassID1">Class ID 1</label>
+                  <input type="text" id="addClassID1" name="addClassID1" placeholder="Input here...">
+                  <label for="addStatus1">Status</label>
+                  <input type="text" id="addStatus1" name="addStatus1" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addClassID2">Class ID 2</label>
+                  <input type="text" id="addClassID2" name="addClassID2" placeholder="Input here...">
+                  <label for="addStatus2">Status</label>
+                  <input type="text" id="addStatus2" name="addStatus2" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addClassID3">Class ID 3</label>
+                  <input type="text" id="addClassID3" name="addClassID3" placeholder="Input here...">
+                  <label for="addStatus3">Status</label>
+                  <input type="text" id="addStatus3" name="addStatus3" placeholder="Input here...">
+                </div>
+                <div class="input-box">
+                  <label for="addClassID4">Class ID 4</label>
+                  <input type="text" id="addClassID4" name="addClassID4" placeholder="Input here...">
+                  <label for="addStatus4">Status</label>
+                  <input type="text" id="editStatus4" name="addStatus4" placeholder="Input here...">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+        <div class="column">
+          <div class="change-btn" id="saveAddBtn">Save add</div>
+        </div>
+      </div>
+    </div>
   
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -189,6 +276,11 @@
       document.getElementById('saveChangesBtn').addEventListener('click', function() {
         saveChanges();
       });
+
+      // Gắn sự kiện khi nhấn nút "Save Add "
+      document.getElementById('saveAddBtn').addEventListener('click', function() {
+        saveAdd();
+      });      
   
       // Hàm tìm kiếm học sinh
       function searchStudents() {
@@ -224,10 +316,58 @@
               tbody.appendChild(row);
             });
   
-            // Gắn sự kiện cho nút Edit mới tạo
+            // Gắn sự kiện cho nút Edit mới tạo 
             attachEditEventListeners();
           })
           .catch(error => console.error('Error fetching student data:', error));
+      }
+
+      // Gắn sự kiện chi nút Add
+      attachAddEventListeners();
+
+      //Popup functionality for Add button
+      function attachAddEventListeners() {
+        const addButton = document.querySelector(".add-btn");
+        const addPopup = document.getElementById("open-popup-add");
+        const cancelAddButton = addPopup.querySelector(".close-add-menu");
+
+if (!addPopup) {
+    console.error("Popup element not found. Check if the selector is correct.");
+    return;
+}
+
+if (!cancelAddButton) {
+    console.error("Close button for popup not found. Check if the selector is correct.");
+    return;
+}
+
+// Sự kiện cho nút "Add"
+addButton.addEventListener("click", function() {
+    addPopup.style.display = "block";
+});
+
+// Sự kiện cho nút đóng popup
+cancelAddButton.addEventListener("click", function() {
+    addPopup.style.display = "none";
+});
+
+      }
+
+      // Hàm lưu thay đổi
+        function saveAdd() {
+        const formData = new FormData(document.getElementById('addForm'));
+        
+        fetch('assets/php/studentadd.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          // Thực hiện các hành động cần thiết sau khi lưu thay đổi, chẳng hạn như hiển thị thông báo thành công
+          // hoặc làm mới lại trang để cập nhật dữ liệu mới
+        })
+        .catch(error => console.error('Error saving changes:', error));
       }
 
       // Popup functionality for Edit button
