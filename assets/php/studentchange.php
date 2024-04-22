@@ -1,58 +1,85 @@
 <?php
-// Kết nối đến cơ sở dữ liệu
+// Database connection parameters
 $servername = "localhost";
 $username = "root";
 $password = "096900";
 $database = "studentmanagedatabase";
 
-// Tạo kết nối mới
+// Create connection
 $conn = new mysqli($servername, $username, $password, $database);
 
-// Kiểm tra kết nối
+// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Kiểm tra xem có dữ liệu được gửi từ form không
+// Check if data is sent from the form
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Lấy dữ liệu từ form
-    $studentName = $_POST['editStudentName'];
-    $birthDate = $_POST['editDOB'];
-    $phoneNumber = $_POST['editPhone'];
-    $studentEmail = $_POST['editEmail'];
-    $parentPhone = $_POST['editParentPhone'];
-    $parentEmail = $_POST['editParentEmail'];
-    $studentId = $_POST['editStudentID']; // Lấy StudentID từ form
+  // Extract data from the form
+  $studentName = $_POST['editStudentName'];
+  $birthDate = $_POST['editDOB'];
+  $phoneNumber = $_POST['editPhone'];
+  $studentEmail = $_POST['editEmail'];
+  $parentPhone = $_POST['editParentPhone'];
+  $parentEmail = $_POST['editParentEmail'];
+  $studentId = $_POST['editStudentID'];
 
-    // Lưu thông tin sinh viên vào cơ sở dữ liệu
-    $sql = "UPDATE student SET 
-                StudentName='$studentName', 
-                BirthDate='$birthDate', 
-                PhoneNumber='$phoneNumber', 
-                StudentEmail='$studentEmail'
-                WHERE StudentID='$studentId'";
+  // Update student information in the database
+  $sql_student = "UPDATE student SET 
+                  StudentName='$studentName', 
+                  BirthDate='$birthDate', 
+                  PhoneNumber='$phoneNumber', 
+                  StudentEmail='$studentEmail'
+                  WHERE StudentID='$studentId'";
+  
+  // Execute the SQL statement for updating student information
+  if ($conn->query($sql_student) === TRUE) {
+    // Update parent information in the database
+    $sql_parent = "UPDATE parent SET 
+                    ParentPhoneNumber='$parentPhone', 
+                    ParentEmail='$parentEmail'
+                    WHERE StudentID='$studentId'";
     
-    // Thực thi câu lệnh SQL và kiểm tra kết quả
-    if ($conn->query($sql) === TRUE) {
-        // Tiếp tục cập nhật thông tin của phụ huynh
-        $sql_parent = "UPDATE parent SET 
-                        ParentPhoneNumber='$parentPhone', 
-                        ParentEmail='$parentEmail'
-                        WHERE StudentID='$studentId'";
+    // Execute the SQL statement for updating parent information
+    if ($conn->query($sql_parent) === TRUE) {
+      // Update class information in the database
+      // Loop through each class input field and update class information
+      for ($i = 1; $i <= 4; $i++) {
+        $classIdField = "editClassID$i";
+        $statusField = "editStatus$i";
+        $classId = $_POST[$classIdField];
+        $status = $_POST[$statusField];
 
-        if ($conn->query($sql_parent) === TRUE) {
-            // Cập nhật thông tin thành công cho cả sinh viên và phụ huynh
-            echo json_encode(array("success" => true, "message" => "Student and parent information updated successfully"));
-        } else {
-            // Trả về thông báo lỗi nếu có lỗi xảy ra khi cập nhật thông tin phụ huynh
-            echo json_encode(array("success" => false, "error" => "Error updating parent information: " . $conn->error));
+        // Check if class ID is empty
+        if (!empty($classId)) {
+          // Check if the class ID exists for the student in the database
+          $sql_check_class = "SELECT * FROM student_class WHERE StudentID='$studentId' AND ClassID='$classId'";
+          $result = $conn->query($sql_check_class);
+
+          if ($result->num_rows > 0) {
+            // Update status if the class ID exists
+            $sql_update_status = "UPDATE student_class SET Status='$status' WHERE StudentID='$studentId' AND ClassID='$classId'";
+            $conn->query($sql_update_status);
+          } else {
+            // Insert new record if the class ID does not exist
+            $sql_insert_class = "INSERT INTO student_class (StudentID, ClassID, Status) VALUES ('$studentId', '$classId', '$status')";
+            $conn->query($sql_insert_class);
+          }
         }
+      }
+
+      // Return success message after updating all information
+      echo json_encode(array("success" => true, "message" => "Student, parent, and class information updated successfully"));
     } else {
-        // Trả về thông báo lỗi nếu có lỗi xảy ra khi cập nhật thông tin sinh viên
-        echo json_encode(array("success" => false, "error" => "Error updating student information: " . $conn->error));
+      // Return error message if there is an error updating parent information
+      echo json_encode(array("success" => false, "error" => "Error updating parent information: " . $conn->error));
     }
+  } else {
+    // Return error message if there is an error updating student information
+    echo json_encode(array("success" => false, "error" => "Error updating student information: " . $conn->error));
+  }
 }
 
-// Đóng kết nối
+// Close the connection
 $conn->close();
 ?>
