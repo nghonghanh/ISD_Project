@@ -204,10 +204,6 @@
   
 }
 
-.st-title .box {
-  
-}
-
 .box .search-btn {
   padding: 3px 18px;
   color: white;
@@ -310,4 +306,29 @@
 
 .select-btn:hover {
   color: #db0829;
+}
+
+/* Styles for delete popup */
+#open-popup-delete {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.popup .save-btn,
+.popup .cancel-btn {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background-color: rgba(219, 8, 41, 1);
+  padding: 8px 33px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: rgb(219, 8, 41);
+  width: 50%;
 }

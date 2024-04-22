@@ -247,6 +247,22 @@
   </div>
 </div>
 
+<!-- Popup for deleting student information -->
+<div id="open-popup-delete" class="open-popup">
+  <div class="popup-title">
+    <h2>Delete Student</h2>
+  </div>
+  <div class="st-container">
+    <div class="st-box">
+      <h3 class="box-content">Are you sure to delete this student?</h3>
+    </div>
+    <div class="column">
+      <div class="delete-btn" id="confirmDeleteBtn">Save</div>
+      <div class="cancel-btn" id="cancelDeleteBtn">Cancel</div>
+    </div>
+  </div>
+</div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -286,21 +302,30 @@
             // Xóa dữ liệu cũ trong bảng
             tbody.innerHTML = '';
   
-            // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
-            data.forEach(student => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td>${student.StudentID}</td>
-                <td>${student.StudentName}</td>
-                <td>${student.ClassID}</td>
-                <td>${student.PhoneNumber}</td>
-                <td>${student.StudentEmail}</td>
-                <td>${student.Status}</td>
-                <td>
-                  <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
-                  <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
-                </td>
-              `;
+// Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
+data.forEach(student => {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${student.StudentID}</td>
+    <td>${student.StudentName}</td>
+    <td>${student.ClassID}</td>
+    <td>${student.PhoneNumber}</td>
+    <td>${student.StudentEmail}</td>
+    <td>${student.Status}</td>
+  `;
+  // Kiểm tra nếu có giá trị StudentID
+  if (student.StudentID !== '') {
+    // Nếu có, thêm nút Edit và Delete
+    row.innerHTML += `
+      <td>
+        <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
+        <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
+      </td>
+    `;
+  } else {
+    // Nếu không có, thêm một ô trống để giữ cấu trúc của hàng
+    row.innerHTML += '<td></td>';
+  }
   
               // Thêm hàng vào bảng
               tbody.appendChild(row);
@@ -308,6 +333,10 @@
   
             // Gắn sự kiện cho nút Edit mới tạo 
             attachEditEventListeners();
+
+            //Gắn sự kiện cho nút Delete mới tạo
+            attachDeleteEventListeners();
+
           })
           .catch(error => console.error('Error fetching student data:', error));
       }
@@ -452,6 +481,37 @@ function attachEditEventListeners() {
     .catch(error => console.error('Error saving data:', error));
   }
 
+// Popup functionality for Delete button
+function attachDeleteEventListeners() {
+  const deleteButtons = document.querySelectorAll(".delete-btn");
+  const deletePopup = document.getElementById("open-popup-delete");
+
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", function() {
+      const studentId = this.getAttribute("data-studentid");
+
+      // Show delete confirmation popup
+      deletePopup.style.display = "block";
+    });
+
+    // Attach event listener for confirm delete button
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    confirmDeleteBtn.addEventListener('click', function() {
+      // Add your code here to handle delete action
+
+      // After handling delete action, hide the delete popup
+      deletePopup.style.display = "none";
+    });
+
+    // Attach event listener for cancel delete button
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    cancelDeleteBtn.addEventListener('click', function() {
+      // Close delete confirmation popup
+      deletePopup.style.display = "none";
+    });
+  });
+}
+ 
     });
   </script>
 </body>
