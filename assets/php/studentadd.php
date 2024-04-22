@@ -43,8 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if ($conn->query($sql_insert_student) === TRUE) {
     // Insert parent information into the database
-    $sql_insert_parent = "INSERT INTO parents (StudentID, ParentPhoneNumber, ParentEmail) 
-                          VALUES ('$studentId', '$parentPhone', '$parentEmail')";
+    $sql_insert_parent = "INSERT INTO parents ('ParentID', StudentID, ParentPhoneNumber, ParentEmail) 
+                          VALUES ('$studentId', '$studentId', '$parentPhone', '$parentEmail')";
 
     if ($conn->query($sql_insert_parent) === TRUE) {
       // Loop through each class input field and insert class information

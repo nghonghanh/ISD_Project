@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IZONE Institute</title>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+<style>
+  .main {
+    height: auto;
+    width: calc(100% - 260px);
+  }
+  
+  .input-box label {
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="logo">
+        <a href="home.html"><img id="logo" src="assets/img/izone-logo-color.png" alt="logo"></a>
+      </div>
+      <div class="login-btn"></div>
+      <a href="index.html" class="btn">Log out</a>
+    </div>
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="student.html">
+            <div>STUDENT</div>
+          </a>
+        </li>
+        <li>
+          <a href="performance.html">
+            <div>PERFORMANCE</div>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div>CLASS</div>
+          </a>
+        </li>
+        <li>
+          <a href="admin.html">
+            <div>ADMIN</div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="main">
+
+      <!-- Thanh tìm kiếm -->
+      <div class="per-button">
+        <button type="button" class="select-btn" id="completedBtn">Completed</button>
+        <button type="button" class="select-btn" id="studyingBtn">Studying</button>
+      </div>
+
+      <div class="st-title">
+        <div class="header">
+          <h2>Student Performance</h2>
+          <div class="box">
+            <button type="button" class="search-btn add-btn" id="searchBtn">Add</button>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+          </div>
+        </div>
+
+        <!-- Bảng danh sách học sinh -->
+        <table class="student-table" id="studentData">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Class ID</th>
+              <th>Test 1</th>
+              <th>Test 2</th>
+              <th>Final</th>
+              <th>Attendance</th>
+              <th>Homework</th>
+              <th>Function</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dữ liệu sinh viên sẽ được thêm vào đây bằng JavaScript -->
+          </tbody>
+        </table>  
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+<div id="open-popup" class="open-popup">
+    <div class="popup-title">
+    <h2>Student Performance</h2>
+    <p class="close-menu">X</p>
+    </div>
+  
+    <div class="st-container">
+      <div class="st-box">
+        <h3 class="box-content">Test Results</h3>
+        <div class="st-form">
+          <form action="">
+            <div class="column">
+              <div class="input-box">
+                <label>Test 1</label>
+                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+              </div>
+              <div class="input-box">
+                <label>Test 2</label>
+                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+              </div>
+              <div class="input-box">
+                <label>Final</label>
+                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+     <div class="st-box">
+      <h3 class="box-content">Completion Rate</h3>
+      <div class="st-form">
+        <form action="">
+          <div class="column">
+            <div class="input-box">
+              <label>Attendance Rate</label>
+              <input type="text" id="nameInput" placeholder="Loading..." readonly>
+            </div>
+            <div class="input-box">
+              <label>Homework</label>
+              <input type="text" id="nameInput" placeholder="Loading..." readonly>
+            </div>
+          </div>
+        </form>
+      </div>
+     </div>
+  
+     
+      <div class="column">
+        <div class="change-btn">Save changes</div>
+      </div>
+     
+    </div>
+  
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Mặc định hiển thị dữ liệu với trạng thái Completed
+      getPerformanceData('Completed');
+
+      const completedBtn = document.getElementById('completedBtn');
+      const studyingBtn = document.getElementById('studyingBtn');
+
+      completedBtn.addEventListener('click', function() {
+        getPerformanceData('Completed');
+      });
+
+      studyingBtn.addEventListener('click', function() {
+        getPerformanceData('Studying');
+      });
+
+      document.getElementById('searchInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          searchPerformance();
+        }
+      });
+
+      document.getElementById('searchBtn').addEventListener('click', function() {
+        searchPerformance();
+      });
+
+      function searchPerformance() {
+        const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+        getPerformanceData(searchInput);
+      }
+
+      function getPerformanceData(status) {
+        fetch(`assets/php/performance.php?status=${status}`)
+          .then(response => response.json())
+          .then(data => {
+            const performanceTable = document.getElementById('studentData');
+            const tbody = performanceTable.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            data.forEach(performance => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${performance.StudentID}</td>
+                <td>${performance.StudentName}</td>
+                <td>${performance.ClassID}</td>
+                <td>${performance.Test1}</td>
+                <td>${performance.Test2}</td>
+                <td>${performance.FinalTest}</td>
+                <td>${performance.AttendancePercent}</td>
+                <td>${performance.HomeworkPercent}</td>
+                <td>
+                  <button class="search-btn edit-btn" data-studentid="${performance.StudentID}">Edit</button>
+                  <button class="search-btn delete-btn" data-studentid="${performance.StudentID}">Delete</button>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          })
+          .catch(error => console.error('Error fetching performance data:', error));
+      }
+    });
+  </script>
+</body>
+</html>
