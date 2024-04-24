@@ -318,6 +318,7 @@
   left: 50%;
   padding: 30px 30px;
   transition: transform 0.4s, top 0.4s;
+  display: none; /* Thêm dòng này để ẩn popup ban đầu */
 }
 
 .change-popup .delete-btn,

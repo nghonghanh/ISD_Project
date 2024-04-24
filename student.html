@@ -263,255 +263,252 @@
   </div>
 </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
 
-      // Khi trang tải lần đầu, hiển thị toàn bộ danh sách học sinh
-      searchStudents();
+    // Khi trang tải lần đầu, hiển thị toàn bộ danh sách học sinh
+    searchStudents();
 
-      const searchBtn = document.getElementById('searchBtn');
-  
-      // Gắn sự kiện khi nhấn Enter trong ô tìm kiếm
-      document.getElementById('searchInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-          searchStudents();
-        }
-      });
+    const searchBtn = document.getElementById('searchBtn');
 
-      // Gắn sự kiện khi nhấn nút "Save changes"
-      document.getElementById('saveChangesBtn').addEventListener('click', function() {
-        saveChanges();
-      });
-
-      // Gắn sự kiện khi nhấn nút "Save Add "
-      document.getElementById('saveAddBtn').addEventListener('click', function() {
-        saveAdd();
-      });      
-  
-      // Hàm tìm kiếm học sinh
-      function searchStudents() {
-        const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
-  
-        // Gửi yêu cầu tìm kiếm đến server
-        fetch(`assets/php/student.php?search=${searchInput}`)
-          .then(response => response.json())
-          .then(data => {
-            const studentTable = document.getElementById('studentData');
-            const tbody = studentTable.querySelector('tbody');
-  
-            // Xóa dữ liệu cũ trong bảng
-            tbody.innerHTML = '';
-  
-// Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
-data.forEach(student => {
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td>${student.StudentID}</td>
-    <td>${student.StudentName}</td>
-    <td>${student.ClassID}</td>
-    <td>${student.PhoneNumber}</td>
-    <td>${student.StudentEmail}</td>
-    <td>${student.Status}</td>
-  `;
-  // Kiểm tra nếu có giá trị StudentID
-  if (student.StudentID !== '') {
-    // Nếu có, thêm nút Edit và Delete
-    row.innerHTML += `
-      <td>
-        <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
-        <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
-      </td>
-    `;
-  } else {
-    // Nếu không có, thêm một ô trống để giữ cấu trúc của hàng
-    row.innerHTML += '<td></td>';
-  }
-  
-              // Thêm hàng vào bảng
-              tbody.appendChild(row);
-            });
-  
-            // Gắn sự kiện cho nút Edit mới tạo 
-            attachEditEventListeners();
-
-            //Gắn sự kiện cho nút Delete mới tạo
-            attachDeleteEventListeners();
-
-          })
-          .catch(error => console.error('Error fetching student data:', error));
+    // Gắn sự kiện khi nhấn Enter trong ô tìm kiếm
+    document.getElementById('searchInput').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        searchStudents();
       }
+    });
 
-      // Gắn sự kiện cho nút Add
-      attachAddEventListeners();
+    // Gắn sự kiện khi nhấn nút "Save changes"
+    document.getElementById('saveChangesBtn').addEventListener('click', function() {
+      saveChanges();
+    });
 
-      //Popup functionality for Add button
-      function attachAddEventListeners() {
-        const addButton = document.querySelector(".add-btn");
-        const addPopup = document.getElementById("open-popup-add");
-        const cancelAddButton = addPopup.querySelector(".close-add-menu");
+    // Gắn sự kiện khi nhấn nút "Save Add "
+    document.getElementById('saveAddBtn').addEventListener('click', function() {
+      saveAdd();
+    });
 
-if (!addPopup) {
-    console.error("Popup element not found. Check if the selector is correct.");
-    return;
-}
+    // Hàm tìm kiếm học sinh
+    function searchStudents() {
+      const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
 
-if (!cancelAddButton) {
-    console.error("Close button for popup not found. Check if the selector is correct.");
-    return;
-}
-
-// Sự kiện cho nút "Add"
-addButton.addEventListener("click", function() {
-    addPopup.style.display = "block";
-});
-
-// Sự kiện cho nút đóng Addpopup
-cancelAddButton.addEventListener("click", function() {
-    addPopup.style.display = "none";
-});
-
-      }
-
-// Hàm lưu thông tin sinh viên mới
-function saveAdd() {
-  const formData = new FormData(document.getElementById('addForm'));
-  
-  fetch('assets/php/studentadd.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data.message);
-    // Thực hiện các hành động cần thiết sau khi lưu thay đổi, chẳng hạn như hiển thị thông báo thành công
-    // hoặc làm mới lại trang để cập nhật dữ liệu mới
-  })
-  .catch(error => console.error('Error saving changes:', error));
-}
-
-
-// Popup functionality for Edit button
-function attachEditEventListeners() {
-  const editButtons = document.querySelectorAll(".edit-btn");
-  const editPopup = document.getElementById("open-popup");
-  const cancelEditButton = editPopup.querySelector(".close-menu");
-
-  editButtons.forEach(button => {
-    button.addEventListener("click", function() {
-      const studentId = this.getAttribute("data-studentid");
-
-      // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
-      fetch(`assets/php/studentinfor.php?id=${studentId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
+      // Gửi yêu cầu tìm kiếm đến server
+      fetch(`assets/php/student.php?search=${searchInput}`)
+        .then(response => response.json())
         .then(data => {
-          // Đổ dữ liệu vào form chỉnh sửa
-          document.getElementById('editStudentName').value = data.StudentName;
-          document.getElementById('editDOB').value = data.BirthDate;
-          document.getElementById('editPhone').value = data.PhoneNumber;
-          document.getElementById('editEmail').value = data.StudentEmail;
-          document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
-          document.getElementById('editParentEmail').value = data.ParentEmail;
-          document.getElementById('editStudentID').value = studentId;
+          const studentTable = document.getElementById('studentData');
+          const tbody = studentTable.querySelector('tbody');
 
-          // Hiển thị thông tin ClassID và Status tương ứng vào các label
-          document.getElementById('editClassID1').value = data.ClassID3 ? data.ClassID3 : '';
-          document.getElementById('editStatus1').value = data.Status3 ? data.Status3 : '';
-          document.getElementById('editClassID2').value = data.ClassID5 ? data.ClassID5 : '';
-          document.getElementById('editStatus2').value = data.Status5 ? data.Status5 : '';
-          document.getElementById('editClassID3').value = data.ClassID7 ? data.ClassID7 : '';
-          document.getElementById('editStatus3').value = data.Status7 ? data.Status7 : '';
-          document.getElementById('editClassID4').value = data.ClassID9 ? data.ClassID9 : '';
-          document.getElementById('editStatus4').value = data.Status9 ? data.Status9 : '';
+          // Xóa dữ liệu cũ trong bảng
+          tbody.innerHTML = '';
 
-          // Hiển thị popup chỉnh sửa
-          editPopup.style.display = "block";
+          // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
+          data.forEach(student => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${student.StudentID}</td>
+              <td>${student.StudentName}</td>
+              <td>${student.ClassID}</td>
+              <td>${student.PhoneNumber}</td>
+              <td>${student.StudentEmail}</td>
+              <td>${student.Status}</td>
+            `;
+            // Kiểm tra nếu có giá trị StudentID
+            if (student.StudentID !== '') {
+              // Nếu có, thêm nút Edit và Delete
+              row.innerHTML += `
+                <td>
+                  <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
+                  <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
+                </td>
+              `;
+            } else {
+              // Nếu không có, thêm một ô trống để giữ cấu trúc của hàng
+              row.innerHTML += '<td></td>';
+            }
+
+            // Thêm hàng vào bảng
+            tbody.appendChild(row);
+          });
+
+          // Gắn sự kiện cho nút Edit mới tạo 
+          attachEditEventListeners();
+
+          // Gắn sự kiện cho nút Delete mới tạo
+          attachDeleteEventListeners();
+
         })
-        .catch(error => {
-          console.error('Error fetching student data:', error); // Xử lý lỗi
-        });
-    });
-  });
+        .catch(error => console.error('Error fetching student data:', error));
+    }
 
-  // Sự kiện cho nút đóng popup
-  cancelEditButton.addEventListener("click", function() {
-    editPopup.style.display = "none";
-  });
-}
+    // Gắn sự kiện cho nút Add
+    attachAddEventListeners();
 
-  // Function to save changes
-  function saveChanges() {
-    // Collect form data
-    const formData = new FormData(document.getElementById('editForm'));
+    // Popup functionality for Add button
+    function attachAddEventListeners() {
+      const addButton = document.querySelector(".add-btn");
+      const addPopup = document.getElementById("open-popup-add");
+      const cancelAddButton = addPopup.querySelector(".close-add-menu");
 
-    // Send data to studentchange.php
-    fetch('assets/php/studentchange.php', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data.message);
-      // Perform necessary actions after saving changes
-      // For example, display success message or refresh the page to update data
-    })
-    .catch(error => console.error('Error saving changes:', error));
-  }
+      if (!addPopup) {
+        console.error("Popup element not found. Check if the selector is correct.");
+        return;
+      }
 
-  // Function to save the added student information
-  function saveAdd() {
-    // Create FormData object to collect form data
-    const formData = new FormData(document.getElementById('addForm'));
-    
-    // Send form data to studentadd.php using fetch API
-    fetch('assets/php/studentadd.php', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data.message);
-      // Perform necessary actions after saving the data, such as displaying a success message
-      // or refreshing the page to update with new data
-    })
-    .catch(error => console.error('Error saving data:', error));
-  }
+      if (!cancelAddButton) {
+        console.error("Close button for popup not found. Check if the selector is correct.");
+        return;
+      }
 
-// Function to attach event listeners for Delete button
-function attachDeleteEventListeners() {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
-    const deletePopup = document.getElementById("open-popup-delete");
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+      // Sự kiện cho nút "Add"
+      addButton.addEventListener("click", function() {
+        addPopup.style.display = "block";
+      });
 
-    deleteButtons.forEach(button => {
+      // Sự kiện cho nút đóng Addpopup
+      cancelAddButton.addEventListener("click", function() {
+        addPopup.style.display = "none";
+      });
+
+    }
+
+    // Popup functionality for Edit button
+    function attachEditEventListeners() {
+      const editButtons = document.querySelectorAll(".edit-btn");
+      const editPopup = document.getElementById("open-popup");
+      const cancelEditButton = editPopup.querySelector(".close-menu");
+
+      editButtons.forEach(button => {
         button.addEventListener("click", function() {
-            const studentId = this.getAttribute("data-studentid");
-            
-    // Send request to delete student data
-    fetch(`assets/php/studentdelete.php?id=${studentId}`, {
-        method: 'DELETE'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        // Perform necessary actions after deletion, such as displaying a success message
-        // or refreshing the page to update with new data
-        searchStudents(); // Refresh the student list after deletion
-    })
-    .catch(error => console.error('Error deleting student data:', error));
-  });
-  });
+          const studentId = this.getAttribute("data-studentid");
 
-  // Sự kiện cho nút đóng delete popup
-  cancelDeleteBtn.addEventListener("click", function() {
-    deletePopup.style.display = "none";
+          // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
+          fetch(`assets/php/studentinfor.php?id=${studentId}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Đổ dữ liệu vào form chỉnh sửa
+              document.getElementById('editStudentName').value = data.StudentName;
+              document.getElementById('editDOB').value = data.BirthDate;
+              document.getElementById('editPhone').value = data.PhoneNumber;
+              document.getElementById('editEmail').value = data.StudentEmail;
+              document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
+              document.getElementById('editParentEmail').value = data.ParentEmail;
+              document.getElementById('editStudentID').value = studentId;
+
+              // Hiển thị thông tin ClassID và Status tương ứng vào các label
+              document.getElementById('editClassID1').value = data.ClassID3 ? data.ClassID3 : '';
+              document.getElementById('editStatus1').value = data.Status3 ? data.Status3 : '';
+              document.getElementById('editClassID2').value = data.ClassID5 ? data.ClassID5 : '';
+              document.getElementById('editStatus2').value = data.Status5 ? data.Status5 : '';
+              document.getElementById('editClassID3').value = data.ClassID7 ? data.ClassID7 : '';
+              document.getElementById('editStatus3').value = data.Status7 ? data.Status7 : '';
+              document.getElementById('editClassID4').value = data.ClassID9 ? data.ClassID9 : '';
+              document.getElementById('editStatus4').value = data.Status9 ? data.Status9 : '';
+
+              // Hiển thị popup chỉnh sửa
+              editPopup.style.display = "block";
+            })
+            .catch(error => {
+              console.error('Error fetching student data:', error); // Xử lý lỗi
+            });
+        });
+      });
+
+      // Sự kiện cho nút đóng popup
+      cancelEditButton.addEventListener("click", function() {
+        editPopup.style.display = "none";
+      });
+    }
+
+    // Function to save changes
+    function saveChanges() {
+      // Collect form data
+      const formData = new FormData(document.getElementById('editForm'));
+
+      // Send data to studentchange.php
+      fetch('assets/php/studentchange.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          // Perform necessary actions after saving changes
+          // For example, display success message or refresh the page to update data
+        })
+        .catch(error => console.error('Error saving changes:', error));
+    }
+
+    // Function to save the added student information
+    function saveAdd() {
+      // Create FormData object to collect form data
+      const formData = new FormData(document.getElementById('addForm'));
+
+      // Send form data to studentadd.php using fetch API
+      fetch('assets/php/studentadd.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          // Perform necessary actions after saving the data, such as displaying a success message
+          // or refreshing the page to update with new data
+        })
+        .catch(error => console.error('Error saving data:', error));
+    }
+
+    // Function to attach event listeners for Delete button
+    function attachDeleteEventListeners() {
+      const deleteButtons = document.querySelectorAll(".delete-btn");
+
+      deleteButtons.forEach(button => {
+        button.addEventListener("click", function() {
+          const studentId = this.getAttribute("data-studentid");
+          const deletePopup = document.getElementById("open-popup-delete");
+          const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+          const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+          // Hiển thị popup xác nhận xóa
+          deletePopup.style.display = "block";
+
+          // Xác nhận xóa
+          confirmDeleteBtn.addEventListener("click", function() {
+            // Gửi yêu cầu xóa sinh viên
+            fetch(`assets/php/studentdelete.php?id=${studentId}`, {
+              method: 'DELETE'
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                console.log(data.message);
+                // Đóng popup sau khi xóa thành công
+                deletePopup.style.display = "none";
+                // Thực hiện các hành động cần thiết sau khi xóa, chẳng hạn như làm mới trang để cập nhật dữ liệu mới
+              })
+              .catch(error => console.error('Error deleting student data:', error));
+          });
+
+          // Hủy bỏ xóa
+          cancelDeleteBtn.addEventListener("click", function() {
+            // Đóng popup
+            deletePopup.style.display = "none";
+          });
+        });
+      });
+    }
+
   });
-} 
-    });
-  </script>
+</script>
+
 </body>
 </html>
