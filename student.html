@@ -484,37 +484,13 @@ function attachEditEventListeners() {
 // Function to attach event listeners for Delete button
 function attachDeleteEventListeners() {
     const deleteButtons = document.querySelectorAll(".delete-btn");
+    const deletePopup = document.getElementById("open-popup-delete");
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
     deleteButtons.forEach(button => {
         button.addEventListener("click", function() {
             const studentId = this.getAttribute("data-studentid");
-
-            // Show delete confirmation popup
-            const deletePopup = document.getElementById("open-popup-delete");
-            deletePopup.style.display = "block";
-
-            // Attach event listener for confirm delete button
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-            confirmDeleteBtn.addEventListener('click', function() {
-                // Send request to delete student data
-                deleteStudent(studentId);
-
-                // After handling delete action, hide the delete popup
-                deletePopup.style.display = "none";
-            });
-
-            // Attach event listener for cancel delete button
-            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-            cancelDeleteBtn.addEventListener('click', function() {
-                // Close delete confirmation popup
-                deletePopup.style.display = "none";
-            });
-        });
-    });
-}
-
-// Function to delete student data
-function deleteStudent(studentId) {
+            
     // Send request to delete student data
     fetch(`assets/php/studentdelete.php?id=${studentId}`, {
         method: 'DELETE'
@@ -527,8 +503,14 @@ function deleteStudent(studentId) {
         searchStudents(); // Refresh the student list after deletion
     })
     .catch(error => console.error('Error deleting student data:', error));
-}
- 
+  });
+  });
+
+  // Sự kiện cho nút đóng delete popup
+  cancelDeleteBtn.addEventListener("click", function() {
+    deletePopup.style.display = "none";
+  });
+} 
     });
   </script>
 </body>
