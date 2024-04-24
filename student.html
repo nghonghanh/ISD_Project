@@ -248,7 +248,7 @@
 </div>
 
 <!-- Popup for deleting student information -->
-<div id="open-popup-delete" class="open-popup">
+<div id="open-popup-delete" class="change-popup">
   <div class="popup-title">
     <h2>Delete Student</h2>
   </div>
@@ -481,35 +481,52 @@ function attachEditEventListeners() {
     .catch(error => console.error('Error saving data:', error));
   }
 
-// Popup functionality for Delete button
+// Function to attach event listeners for Delete button
 function attachDeleteEventListeners() {
-  const deleteButtons = document.querySelectorAll(".delete-btn");
-  const deletePopup = document.getElementById("open-popup-delete");
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-  deleteButtons.forEach(button => {
-    button.addEventListener("click", function() {
-      const studentId = this.getAttribute("data-studentid");
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            const studentId = this.getAttribute("data-studentid");
 
-      // Show delete confirmation popup
-      deletePopup.style.display = "block";
+            // Show delete confirmation popup
+            const deletePopup = document.getElementById("open-popup-delete");
+            deletePopup.style.display = "block";
+
+            // Attach event listener for confirm delete button
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            confirmDeleteBtn.addEventListener('click', function() {
+                // Send request to delete student data
+                deleteStudent(studentId);
+
+                // After handling delete action, hide the delete popup
+                deletePopup.style.display = "none";
+            });
+
+            // Attach event listener for cancel delete button
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            cancelDeleteBtn.addEventListener('click', function() {
+                // Close delete confirmation popup
+                deletePopup.style.display = "none";
+            });
+        });
     });
+}
 
-    // Attach event listener for confirm delete button
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    confirmDeleteBtn.addEventListener('click', function() {
-      // Add your code here to handle delete action
-
-      // After handling delete action, hide the delete popup
-      deletePopup.style.display = "none";
-    });
-
-    // Attach event listener for cancel delete button
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-    cancelDeleteBtn.addEventListener('click', function() {
-      // Close delete confirmation popup
-      deletePopup.style.display = "none";
-    });
-  });
+// Function to delete student data
+function deleteStudent(studentId) {
+    // Send request to delete student data
+    fetch(`assets/php/studentdelete.php?id=${studentId}`, {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        // Perform necessary actions after deletion, such as displaying a success message
+        // or refreshing the page to update with new data
+        searchStudents(); // Refresh the student list after deletion
+    })
+    .catch(error => console.error('Error deleting student data:', error));
 }
  
     });
