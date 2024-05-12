@@ -23,6 +23,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $parentEmail = $_POST['editParentEmail'];
   $studentId = $_POST['editStudentID'];
 
+      // Kiểm tra thông tin trống
+      $errors = array();
+      if (empty($studentName)) {
+          $errors['editStudentName'] = "Please enter Student Name";
+      }
+      if (empty($birthDate)) {
+          $errors['editDOB'] = "Please enter Date Of Birth";
+      }
+      if (empty($phoneNumber)) {
+          $errors['editPhone'] = "Please enter Phone";
+      }
+      if (empty($studentEmail)) {
+          $errors['editEmail'] = "Please enter Email";
+      }
+      if (empty($parentPhone)) {
+          $errors['editParentPhone'] = "Please enter Parent Phone";
+      }
+      if (empty($parentEmail)) {
+          $errors['editParentEmail'] = "Please enter Parent Email";
+      }
+  
+      // Kiểm tra số điện thoại có phải là số không
+      if (!empty($phoneNumber) && !is_numeric($phoneNumber)) {
+          $errors['editPhone'] = "Please enter a valid phone number";
+      }
+  
+      // Kiểm tra số điện thoại có nhiều hơn 10 số không
+      if (!empty($phoneNumber) && is_numeric($phoneNumber) && strlen($phoneNumber) > 10) {
+          $errors['editPhone'] = "Enter up to 10 numbers for phone";
+      }
+  
+      // Kiểm tra email có nhiều hơn 30 kí tự không 
+      if (!empty($studentEmail) && strlen($studentEmail) > 30) {
+          $errors['editEmail'] = "Please enter no more than 30 characters";
+      }
+  
+      if (!empty($parentEmail) && strlen($parentEmail) > 30) {
+          $errors['editParentEmail'] = "Please enter no more than 30 characters";
+      }
+  
+      // Nếu có lỗi, trả về các thông báo lỗi
+      if (!empty($errors)) {
+          echo json_encode(array("success" => false, "error" => $errors));
+          exit;
+      }
+  
+
   // Update student information in the database
   $sql_student = "UPDATE student SET 
                   StudentName='$studentName', 

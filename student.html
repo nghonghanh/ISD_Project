@@ -15,6 +15,10 @@
   .input-box label {
     font-weight: 600;
   }
+
+  .error-message {
+  color: red;
+  }
 </style>
 </head>
 <body>
@@ -101,26 +105,32 @@
               <div class="input-box">
                 <label for="editStudentName">Student Name</label>
                 <input type="text" id="editStudentName" name="editStudentName" placeholder="Loading...">
+                <span id="editStudentNameError"></span>
               </div>
               <div class="input-box">
                 <label for="editDOB">Date Of Birth</label>
                 <input type="date" id="editDOB" name="editDOB" placeholder="Loading...">
+                <span id="editDOBError"></span>
               </div>
               <div class="input-box">
                 <label for="editPhone">Phone</label>
                 <input type="tel" id="editPhone" name="editPhone" placeholder="Loading...">
+                <span id="editPhoneError"></span>
               </div>
               <div class="input-box">
                 <label for="editEmail">Email</label>
                 <input type="email" id="editEmail" name="editEmail" placeholder="Loading...">
+                <span id="editEmailError"></span>
               </div>
               <div class="input-box">
                 <label for="editParentPhone">Parent Phone</label>
                 <input type="tel" id="editParentPhone" name="editParentPhone" placeholder="Loading...">
+                <span id="editParentPhoneError"></span>
               </div>
               <div class="input-box">
                 <label for="editParentEmail">Parent Email</label>
                 <input type="email" id="editParentEmail" name="editParentEmail" placeholder="Loading...">
+                <span id="editParentEmailError"></span>
               </div>
             </div>
   
@@ -295,57 +305,103 @@
     });
 
     // Hàm tìm kiếm học sinh
-    function searchStudents() {
-      const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+function searchStudents() {
+    const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
 
-      // Gửi yêu cầu tìm kiếm đến server
-      fetch(`assets/php/student.php?search=${searchInput}`)
+    // Gửi yêu cầu tìm kiếm đến server
+    fetch(`assets/php/student.php?search=${searchInput}`)
         .then(response => response.json())
         .then(data => {
-          const studentTable = document.getElementById('studentData');
-          const tbody = studentTable.querySelector('tbody');
+            const studentTable = document.getElementById('studentData');
+            const tbody = studentTable.querySelector('tbody');
 
-          // Xóa dữ liệu cũ trong bảng
-          tbody.innerHTML = '';
+            // Xóa dữ liệu cũ trong bảng
+            tbody.innerHTML = '';
 
-          // Duyệt qua mỗi sinh viên và tạo hàng mới trong bảng
-          data.forEach(student => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${student.StudentID}</td>
-              <td>${student.StudentName}</td>
-              <td>${student.ClassID}</td>
-              <td>${student.PhoneNumber}</td>
-              <td>${student.StudentEmail}</td>
-              <td>${student.Status}</td>
-            `;
-            // Kiểm tra nếu có giá trị StudentID
-            if (student.StudentID !== '') {
-              // Nếu có, thêm nút Edit và Delete
-              row.innerHTML += `
-                <td>
-                  <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
-                  <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
-                </td>
-              `;
+            if (data.length === 0) {
+                // Hiển thị thông báo khi không tìm thấy sinh viên
+                alert("Student not found!");
             } else {
-              // Nếu không có, thêm một ô trống để giữ cấu trúc của hàng
-              row.innerHTML += '<td></td>';
+                // Gom nhóm dữ liệu theo StudentName hoặc StudentID
+                const groupedData = groupData(data);
+
+                // Duyệt qua mỗi nhóm và tạo hàng mới trong bảng
+                groupedData.forEach(studentGroup => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td rowspan="${studentGroup.length}">${studentGroup[0].StudentID}</td>
+                        <td rowspan="${studentGroup.length}">${studentGroup[0].StudentName}</td>
+                    `;
+                    // Hiển thị dữ liệu cho hàng đầu tiên trong nhóm
+                    displayData(row, studentGroup[0]);
+
+                    // Thêm hàng vào bảng
+                    tbody.appendChild(row);
+
+                    // Nếu nhóm có nhiều hơn một phần tử, thêm các hàng tiếp theo
+                    if (studentGroup.length > 1) {
+                        for (let i = 1; i < studentGroup.length; i++) {
+                            const newRow = document.createElement('tr');
+                            displayData(newRow, studentGroup[i]);
+                            tbody.appendChild(newRow);
+                        }
+                    }
+                });
+
+                // Gắn sự kiện cho nút Edit mới tạo 
+                attachEditEventListeners();
+
+                // Gắn sự kiện cho nút Delete mới tạo
+                attachDeleteEventListeners();
             }
-
-            // Thêm hàng vào bảng
-            tbody.appendChild(row);
-          });
-
-          // Gắn sự kiện cho nút Edit mới tạo 
-          attachEditEventListeners();
-
-          // Gắn sự kiện cho nút Delete mới tạo
-          attachDeleteEventListeners();
-
         })
         .catch(error => console.error('Error fetching student data:', error));
+}
+
+// Hàm gom nhóm dữ liệu theo StudentName hoặc StudentID
+function groupData(data) {
+    const groupedData = [];
+    const groupedMap = new Map();
+
+    data.forEach(student => {
+        const key = student.StudentName || student.StudentID;
+        if (!groupedMap.has(key)) {
+            groupedMap.set(key, []);
+        }
+        groupedMap.get(key).push(student);
+    });
+
+    groupedMap.forEach(group => {
+        groupedData.push(group);
+    });
+
+    return groupedData;
+}
+
+// Hàm hiển thị dữ liệu cho một hàng trong bảng
+function displayData(row, student) {
+    row.innerHTML += `
+        <td>${student.ClassID}</td>
+        <td>${student.PhoneNumber}</td>
+        <td>${student.StudentEmail}</td>
+        <td>${student.Status}</td>
+    `;
+    // Kiểm tra nếu có giá trị StudentID
+    if (student.StudentID !== '') {
+        // Nếu có, thêm nút Edit và Delete
+        row.innerHTML += `
+            <td>
+                <button class="search-btn edit-btn" data-studentid="${student.StudentID}">Edit</button>
+                <button class="search-btn delete-btn" data-studentid="${student.StudentID}">Delete</button>
+            </td>
+        `;
+    } else {
+        // Nếu không có, thêm một ô trống để giữ cấu trúc của hàng
+        row.innerHTML += '<td></td>';
     }
+}
+
+
 
     // Gắn sự kiện cho nút Add
     attachAddEventListeners();
@@ -378,6 +434,7 @@
       // Sự kiện cho nút đóng Addpopup
       cancelAddButton.addEventListener("click", function() {
         addPopup.style.display = "none";
+        window.location.reload();
       });
 
     }
@@ -455,8 +512,26 @@
             // Reloading the page to update the list of students
             window.location.reload();
         } else {
-            // If there's an error, display it
-            alert("Failed to add student: " + data.error);
+            // Displaying error messages under corresponding labels
+            Object.keys(data.error).forEach(key => {
+                const errorSpan = document.getElementById(key + 'Error');
+                if (errorSpan) {
+                    errorSpan.textContent = data.error[key];
+                    errorSpan.classList.add('error-message'); // Add error-message class
+                }
+            });
+
+            // Remove error messages for fields that are no longer invalid
+            const invalidFields = Object.keys(data.error);
+            const allFieldIds = ['editStudentName', 'editDOB', 'editPhone', 'editEmail', 'editParentPhone', 'editParentEmail'];
+            allFieldIds.forEach(fieldId => {
+                if (!invalidFields.includes(fieldId)) {
+                    const errorSpan = document.getElementById(fieldId + 'Error');
+                    if (errorSpan) {
+                        errorSpan.textContent = '';
+                    }
+                }
+            });
         }
         })
         .catch(error => console.error('Error saving changes:', error));

@@ -48,8 +48,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Kiểm tra số điện thoại có nhiều hơn 10 số không
-    if (!empty($phoneNumber) && strlen($phoneNumber) > 10) {
+    if (!empty($phoneNumber) && is_numeric($phoneNumber) && strlen($phoneNumber) > 10) {
         $errors['addPhone'] = "Enter up to 10 numbers for phone";
+    }
+
+    // Kiểm tra email có nhiều hơn 30 kí tự không 
+    if (!empty($studentEmail) && strlen($studentEmail) > 30) {
+        $errors['addEmail'] = "Please enter no more than 30 characters";
+    }
+
+    if (!empty($parentEmail) && strlen($parentEmail) > 30) {
+        $errors['addParentEmail'] = "Please enter no more than 30 characters";
     }
 
     // Nếu có lỗi, trả về các thông báo lỗi
