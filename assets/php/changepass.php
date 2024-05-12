@@ -1,8 +1,15 @@
 <?php
+// Kết nối đến cơ sở dữ liệu
+$servername = "127.0.0.1";
+$username = "admin";
+$password = "admin123";
+$dbname = "studentmanagedatabase";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
 // Kiểm tra kết nối
-$conn = new mysqli("localhost", "root", "096900", "studentmanagedatabase");
 if ($conn->connect_error) {
-    die("Kết nối đến cơ sở dữ liệu thất bại: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Lấy mật khẩu cũ từ cơ sở dữ liệu

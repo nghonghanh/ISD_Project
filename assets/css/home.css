@@ -333,3 +333,7 @@
   border: rgb(219, 8, 41);
   width: 50%;
 }
+
+.error-message {
+  color: red;
+}

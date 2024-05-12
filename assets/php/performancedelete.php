@@ -11,27 +11,19 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
     parse_str(file_get_contents("php://input"), $_DELETE);
-    if (!isset($_DELETE['id'])) {
-        echo json_encode(["success" => false, "error" => "Student ID is missing"]);
+    if (!isset($_DELETE['id']) || !isset($_DELETE['status']) || !isset($_DELETE['classId'])) {
+        echo json_encode(["success" => false, "error" => "Missing required parameters"]);
         exit;
     }
     $studentId = $_DELETE['id'];
+    $status = $_DELETE['status'];
+    $classId = $_DELETE['classId'];
 
     $conn->begin_transaction();
     try {
-        $stmt = $conn->prepare("DELETE FROM student_class WHERE StudentID = ?");
-        $stmt->bind_param("i", $studentId);
+        $stmt = $conn->prepare("DELETE FROM student_class WHERE StudentID = ? AND Status = ? AND ClassID = ?");
+        $stmt->bind_param("isi", $studentId, $status, $classId);
         if (!$stmt->execute()) throw new Exception("Error deleting from student_class: " . $stmt->error);
-        $stmt->close();
-
-        $stmt = $conn->prepare("DELETE FROM parent WHERE StudentID = ?");
-        $stmt->bind_param("i", $studentId);
-        if (!$stmt->execute()) throw new Exception("Error deleting from parent: " . $stmt->error);
-        $stmt->close();
-
-        $stmt = $conn->prepare("DELETE FROM student WHERE StudentID = ?");
-        $stmt->bind_param("i", $studentId);
-        if (!$stmt->execute()) throw new Exception("Error deleting from student: " . $stmt->error);
         $stmt->close();
 
         $conn->commit();

@@ -1,17 +1,15 @@
 <?php
+// Kết nối đến cơ sở dữ liệu
+$servername = "127.0.0.1";
+$username = "admin";
+$password = "admin123";
+$dbname = "studentmanagedatabase";
 
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "096900";
-$database = "studentmanagedatabase";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
+// Kiểm tra kết nối
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Retrieve student ID from the URL parameter

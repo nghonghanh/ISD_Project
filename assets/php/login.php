@@ -1,8 +1,8 @@
 <?php
 // Kết nối đến cơ sở dữ liệu
 $servername = "127.0.0.1";
-$username = "root";
-$password = "096900";
+$username = "admin";
+$password = "admin123";
 $dbname = "studentmanagedatabase";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

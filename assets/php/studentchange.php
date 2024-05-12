@@ -1,16 +1,15 @@
 <?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "096900";
-$database = "studentmanagedatabase";
+// Kết nối đến cơ sở dữ liệu
+$servername = "127.0.0.1";
+$username = "admin";
+$password = "admin123";
+$dbname = "studentmanagedatabase";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// Kiểm tra kết nối
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Check if data is sent from the form

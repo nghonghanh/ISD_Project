@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <!-- Bảng danh sách học sinh -->
+        <!-- Bảng danh sách performance -->
         <table class="student-table" id="studentData">
           <thead>
             <tr>
@@ -90,7 +90,7 @@
     </div>
   </div>
 
-  <!-- Popup -->
+  <!-- Popup for editing student performance -->
 <div id="open-popup" class="open-popup">
     <div class="popup-title">
     <h2>Student Performance</h2>
@@ -100,20 +100,20 @@
     <div class="st-container">
       <div class="st-box">
         <h3 class="box-content">Test Results</h3>
-        <div class="st-form">
-          <form action="">
+        <div class="performanceForm">
+          <form id="performanceForm">
             <div class="column">
               <div class="input-box">
                 <label>Test 1</label>
-                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+                <input type="text" id="test1Input" placeholder="Loading...">
               </div>
               <div class="input-box">
                 <label>Test 2</label>
-                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+                <input type="text" id="test2Input" placeholder="Loading...">
               </div>
               <div class="input-box">
                 <label>Final</label>
-                <input type="text" id="nameInput" placeholder="Loading..." readonly>
+                <input type="text" id="finalInput" placeholder="Loading...">
               </div>
             </div>
           </form>
@@ -122,70 +122,100 @@
   
      <div class="st-box">
       <h3 class="box-content">Completion Rate</h3>
-      <div class="st-form">
-        <form action="">
+      <div class="completionForm">
+        <form id="completionForm">
           <div class="column">
             <div class="input-box">
               <label>Attendance Rate</label>
-              <input type="text" id="nameInput" placeholder="Loading..." readonly>
+              <input type="text" id="attendanceInput" placeholder="Loading...">
             </div>
             <div class="input-box">
               <label>Homework</label>
-              <input type="text" id="nameInput" placeholder="Loading..." readonly>
+              <input type="text" id="homeworkInput" placeholder="Loading...">
             </div>
           </div>
         </form>
       </div>
      </div>
-  
-     
+
+
       <div class="column">
-        <div class="change-btn">Save changes</div>
+        <div class="change-btn" id="saveChangesBtn">Save changes</div>
       </div>
      
     </div>
   
   </div>
 
+  <!-- Popup for deleting student information -->
+<div id="open-popup-delete" class="change-popup">
+  <div class="popup-title">
+    <h2>Delete Student</h2>
+  </div>
+  <div class="st-container">
+    <div class="st-box">
+      <h3 class="box-content">Are you sure to delete this student performance?</h3>
+    </div>
+    <div class="column">
+      <div class="delete-btn" id="confirmDeleteBtn">Save</div>
+      <div class="cancel-btn" id="cancelDeleteBtn">Cancel</div>
+    </div>
+  </div>
+</div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Mặc định hiển thị dữ liệu với trạng thái Completed
-      getPerformanceData('Completed');
-
+      let currentStatus = 'Completed'; // Biến để lưu trạng thái hiện tại, mặc định là Completed khi trang được tải lần đầu
+  
+      // Mặc định hiển thị dữ liệu với trạng thái Completed khi mới truy cập performance.html
+      getPerformanceData(currentStatus);
+  
       const completedBtn = document.getElementById('completedBtn');
       const studyingBtn = document.getElementById('studyingBtn');
-
+  
       completedBtn.addEventListener('click', function() {
-        getPerformanceData('Completed');
+        currentStatus = 'Completed';
+        searchPerformance();
       });
-
+  
       studyingBtn.addEventListener('click', function() {
-        getPerformanceData('Studying');
+        currentStatus = 'Studying';
+        searchPerformance();
       });
-
+  
       document.getElementById('searchInput').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
           searchPerformance();
         }
       });
 
+    // Gắn sự kiện khi nhấn nút "Save changes"
+    document.getElementById('saveChangesBtn').addEventListener('click', function() {
+      saveChanges();
+    });
+  
       document.getElementById('searchBtn').addEventListener('click', function() {
         searchPerformance();
       });
-
+  
+      // Hàm tìm kiếm performance
       function searchPerformance() {
         const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
-        getPerformanceData(searchInput);
+        getPerformanceData(currentStatus, searchInput); // Sử dụng biến currentStatus để truyền trạng thái hiện tại
       }
-
-      function getPerformanceData(status) {
-        fetch(`assets/php/performance.php?status=${status}`)
+  
+      function getPerformanceData(status, search = '') {
+        let url = `assets/php/performance.php?status=${status}`;
+        if (search !== '') {
+          url += `&search=${search}`;
+        }
+        fetch(url)
           .then(response => response.json())
           .then(data => {
             const performanceTable = document.getElementById('studentData');
             const tbody = performanceTable.querySelector('tbody');
             tbody.innerHTML = '';
-
+  
             data.forEach(performance => {
               const row = document.createElement('tr');
               row.innerHTML = `
@@ -198,16 +228,140 @@
                 <td>${performance.AttendancePercent}</td>
                 <td>${performance.HomeworkPercent}</td>
                 <td>
-                  <button class="search-btn edit-btn" data-studentid="${performance.StudentID}">Edit</button>
-                  <button class="search-btn delete-btn" data-studentid="${performance.StudentID}">Delete</button>
+                  <button class="search-btn edit-btn" data-studentid="${performance.StudentID}" data-classid="${performance.ClassID}">Edit</button>
+                  <button class="search-btn delete-btn" data-studentid="${performance.StudentID}" data-classid="${performance.ClassID}">Delete</button>
                 </td>
               `;
               tbody.appendChild(row);
             });
+
+          // Gắn sự kiện cho nút Edit mới tạo 
+          attachEditEventListeners();
+
+          // Gắn sự kiện cho nút Delete mới tạo
+          attachDeleteEventListeners();
+
           })
           .catch(error => console.error('Error fetching performance data:', error));
       }
+
+    // Popup functionality for Edit button
+    function attachEditEventListeners() {
+      const editButtons = document.querySelectorAll(".edit-btn");
+      const editPopup = document.getElementById("open-popup");
+      const cancelEditButton = editPopup.querySelector(".close-menu");
+
+      editButtons.forEach(button => {
+        button.addEventListener("click", function() {
+          const studentId = this.getAttribute("data-studentid");
+          const classId = this.getAttribute("data-classid");
+          const status = currentStatus; // Lấy giá trị trạng thái hiện tại
+
+        // Gửi yêu cầu lấy thông tin sinh viên đến performanceinfor.php
+        fetch(`assets/php/performanceinfor.php?studentId=${studentId}&classId=${classId}&status=${status}`)
+        .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+          .then(data => {
+            // Hiển thị thông tin chi tiết của sinh viên trên popup
+            document.getElementById('test1Input').value = data.Test1;
+            document.getElementById('test2Input').value = data.Test2;
+            document.getElementById('finalInput').value = data.FinalTest;
+            document.getElementById('attendanceInput').value = data.AttendancePercent;
+            document.getElementById('homeworkInput').value = data.HomeworkPercent;
+              
+            // Hiển thị popup chỉnh sửa
+              editPopup.style.display = "block"; 
+          })
+          .catch(error => {
+              console.error('Error fetching student data:', error); // Xử lý lỗi
+            });
+        });
+      });
+
+      // Sự kiện cho nút đóng popup
+      cancelEditButton.addEventListener("click", function() {
+        editPopup.style.display = "none";
+      });
+    }
+
+      // Thêm sự kiện lưu thông tin chỉnh sửa khi người dùng nhấn nút "Save changes"
+      function saveChanges() {
+        // Lấy thông tin từ các input
+        const form1 = new FormData(document.getElementById('performanceForm'));
+        const form2 = new FormData(document.getElementById('completionForm'));
+        // Gộp thông tin từ hai form lại
+        const formData = {
+          ...Object.fromEntries(form1),
+          ...Object.fromEntries(form2)
+        };
+        // Gửi thông tin chỉnh sửa về server
+        fetch('assets/php/performancechange.php', {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Xử lý kết quả sau khi lưu
+          console.log('Save result:', data);
+          // Đóng popup sau khi lưu thành công
+          closePopup();
+        })
+        .catch(error => console.error('Error saving changes:', error));
+      }
+      function closePopup() {
+        // Đóng cửa sổ popup
+        document.getElementById('open-popup').classList.remove('active');
+      }
+
+    // Function to attach event listeners for Delete button
+    function attachDeleteEventListeners() {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            const studentId = this.getAttribute("data-studentid");
+            const classId = this.getAttribute("data-classid");
+            const deletePopup = document.getElementById("open-popup-delete");
+            const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+            deletePopup.style.display = "block";
+
+            confirmDeleteBtn.addEventListener("click", function() {
+                fetch(`assets/php/performancedelete.php`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id=${studentId}&status=${currentStatus}&classId=${classId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Deletion successful:", data.message);
+                        // Refresh the page or remove the student row from the table
+                        location.reload();
+                    } else {
+                        console.error("Deletion failed:", data.error);
+                    }
+                    deletePopup.style.display = "none";
+                })
+                .catch(error => console.error('Error deleting performance data:', error));
+            });
+
+            cancelDeleteBtn.addEventListener("click", function() {
+                deletePopup.style.display = "none";
+            });
+        });
+    });
+}
+
     });
   </script>
+  
 </body>
 </html>

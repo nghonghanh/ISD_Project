@@ -132,27 +132,27 @@
               </div>
               <div class="input-box">
                 <label for="editClassID1">Class ID 1</label>
-                <input type="text" id="editClassID1" name="editClassID1" placeholder="Loading...">
+                <input type="text" id="editClassID1" name="editClassID1">
                 <label for="editStatus1">Status</label>
-                <input type="text" id="editStatus1" name="editStatus1" placeholder="Loading...">
+                <input type="text" id="editStatus1" name="editStatus1">
               </div>
               <div class="input-box">
                 <label for="editClassID2">Class ID 2</label>
-                <input type="text" id="editClassID2" name="editClassID2" placeholder="Loading...">
+                <input type="text" id="editClassID2" name="editClassID2">
                 <label for="editStatus2">Status</label>
-                <input type="text" id="editStatus2" name="editStatus2" placeholder="Loading...">
+                <input type="text" id="editStatus2" name="editStatus2">
               </div>
               <div class="input-box">
                 <label for="editClassID3">Class ID 3</label>
-                <input type="text" id="editClassID3" name="editClassID3" placeholder="Loading...">
+                <input type="text" id="editClassID3" name="editClassID3">
                 <label for="editStatus3">Status</label>
-                <input type="text" id="editStatus3" name="editStatus3" placeholder="Loading...">
+                <input type="text" id="editStatus3" name="editStatus3">
               </div>
               <div class="input-box">
                 <label for="editClassID4">Class ID 4</label>
-                <input type="text" id="editClassID4" name="editClassID4" placeholder="Loading...">
+                <input type="text" id="editClassID4" name="editClassID4">
                 <label for="editStatus4">Status</label>
-                <input type="text" id="editStatus4" name="editStatus4" placeholder="Loading...">
+                <input type="text" id="editStatus4" name="editStatus4">
               </div>
             </div>
           </form>
@@ -183,26 +183,32 @@
             <div class="input-box">
               <label for="addStudentName">Student Name</label>
               <input type="text" id="addStudentName" name="addStudentName" placeholder="Input here...">
+              <span id="addStudentNameError"></span>
             </div>
             <div class="input-box">
               <label for="addDOB">Date Of Birth</label>
               <input type="date" id="addDOB" name="addDOB" placeholder="Input here...">
+              <span id="addDOBError"></span>
             </div>
             <div class="input-box">
               <label for="addPhone">Phone</label>
               <input type="tel" id="addPhone" name="addPhone" placeholder="Input here...">
+              <span id="addPhoneError"></span>
             </div>
             <div class="input-box">
               <label for="addEmail">Email</label>
               <input type="email" id="addEmail" name="addEmail" placeholder="Input here...">
+              <span id="addEmailError"></span>
             </div>
             <div class="input-box">
               <label for="addParentPhone">Parent Phone</label>
               <input type="tel" id="addParentPhone" name="addParentPhone" placeholder="Input here...">
+              <span id="addParentPhoneError"></span>
             </div>
             <div class="input-box">
               <label for="addParentEmail">Parent Email</label>
               <input type="email" id="addParentEmail" name="addParentEmail" placeholder="Input here...">
+              <span id="addParentEmailError"></span>
             </div>
           </div>
 
@@ -362,8 +368,12 @@
 
       // Sự kiện cho nút "Add"
       addButton.addEventListener("click", function() {
-        addPopup.style.display = "block";
-      });
+      // Ẩn tất cả các popup khác trước khi hiển thị popup thêm mới
+      document.querySelectorAll('.open-popup').forEach(popup => {
+      popup.style.display = "none";
+    });
+      addPopup.style.display = "block";
+    });
 
       // Sự kiện cho nút đóng Addpopup
       cancelAddButton.addEventListener("click", function() {
@@ -438,74 +448,114 @@
         .then(response => response.json())
         .then(data => {
           console.log(data.message);
-          // Perform necessary actions after saving changes
-          // For example, display success message or refresh the page to update data
+          if (data.success) {
+            // Displaying a success message
+            alert("Edit student information successfully!");
+
+            // Reloading the page to update the list of students
+            window.location.reload();
+        } else {
+            // If there's an error, display it
+            alert("Failed to add student: " + data.error);
+        }
         })
         .catch(error => console.error('Error saving changes:', error));
     }
 
-    // Function to save the added student information
-    function saveAdd() {
-      // Create FormData object to collect form data
-      const formData = new FormData(document.getElementById('addForm'));
+// Function to save the added student information
+function saveAdd() {
+    // Create FormData object to collect form data
+    const formData = new FormData(document.getElementById('addForm'));
 
-      // Send form data to studentadd.php using fetch API
-      fetch('assets/php/studentadd.php', {
+    // Send form data to studentadd.php using fetch API
+    fetch('assets/php/studentadd.php', {
         method: 'POST',
         body: formData
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.message);
-          // Perform necessary actions after saving the data, such as displaying a success message
-          // or refreshing the page to update with new data
-        })
-        .catch(error => console.error('Error saving data:', error));
-    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        if (data.success) {
+            // Displaying a success message
+            alert("Student added successfully!");
+
+            // Reloading the page to update the list of students
+            window.location.reload();
+        } else {
+            // Displaying error messages under corresponding labels
+            Object.keys(data.error).forEach(key => {
+                const errorSpan = document.getElementById(key + 'Error');
+                if (errorSpan) {
+                    errorSpan.textContent = data.error[key];
+                    errorSpan.classList.add('error-message'); // Add error-message class
+                }
+            });
+
+            // Remove error messages for fields that are no longer invalid
+            const invalidFields = Object.keys(data.error);
+            const allFieldIds = ['addStudentName', 'addDOB', 'addPhone', 'addEmail', 'addParentPhone', 'addParentEmail'];
+            allFieldIds.forEach(fieldId => {
+                if (!invalidFields.includes(fieldId)) {
+                    const errorSpan = document.getElementById(fieldId + 'Error');
+                    if (errorSpan) {
+                        errorSpan.textContent = '';
+                    }
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error saving data:', error);
+        alert("Error saving data: " + error);
+    });
+}
+
 
     // Function to attach event listeners for Delete button
     function attachDeleteEventListeners() {
-      const deleteButtons = document.querySelectorAll(".delete-btn");
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-      deleteButtons.forEach(button => {
+    deleteButtons.forEach(button => {
         button.addEventListener("click", function() {
-          const studentId = this.getAttribute("data-studentid");
-          const deletePopup = document.getElementById("open-popup-delete");
-          const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-          const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+            const studentId = this.getAttribute("data-studentid");
+            const deletePopup = document.getElementById("open-popup-delete");
+            const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 
-          // Hiển thị popup xác nhận xóa
-          deletePopup.style.display = "block";
-
-          // Xác nhận xóa
-          confirmDeleteBtn.addEventListener("click", function() {
-            // Gửi yêu cầu xóa sinh viên
-            fetch(`assets/php/studentdelete.php?id=${studentId}`, {
-              method: 'DELETE'
-            })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
-                }
-                return response.json();
-              })
-              .then(data => {
-                console.log(data.message);
-                // Đóng popup sau khi xóa thành công
-                deletePopup.style.display = "none";
-                // Thực hiện các hành động cần thiết sau khi xóa, chẳng hạn như làm mới trang để cập nhật dữ liệu mới
-              })
-              .catch(error => console.error('Error deleting student data:', error));
-          });
-
-          // Hủy bỏ xóa
-          cancelDeleteBtn.addEventListener("click", function() {
-            // Đóng popup
-            deletePopup.style.display = "none";
-          });
-        });
+      // Ẩn tất cả các popup khác trước khi hiển thị popup xác nhận xóa
+      document.querySelectorAll('.open-popup').forEach(popup => {
+        popup.style.display = "none";
       });
-    }
+      deletePopup.style.display = "block";
+
+            confirmDeleteBtn.addEventListener("click", function() {
+                fetch(`assets/php/studentdelete.php`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id=${studentId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Deletion successful:", data.message);
+                        // Refresh the page or remove the student row from the table
+                        location.reload();
+                    } else {
+                        console.error("Deletion failed:", data.error);
+                    }
+                    deletePopup.style.display = "none";
+                })
+                .catch(error => console.error('Error deleting student data:', error));
+            });
+
+            cancelDeleteBtn.addEventListener("click", function() {
+                deletePopup.style.display = "none";
+            });
+        });
+    });
+}
 
   });
 </script>

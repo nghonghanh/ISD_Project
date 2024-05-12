@@ -1,11 +1,11 @@
 <?php
-// Kết nối tới cơ sở dữ liệu
-$servername = "localhost";
-$username = "root";
-$password = "096900";
-$database = "studentmanagedatabase";
+// Kết nối đến cơ sở dữ liệu
+$servername = "127.0.0.1";
+$username = "admin";
+$password = "admin123";
+$dbname = "studentmanagedatabase";
 
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Kiểm tra kết nối
 if ($conn->connect_error) {

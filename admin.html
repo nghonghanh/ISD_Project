@@ -155,8 +155,11 @@
     .then(data => {
       if (data.success) {
         // If password changed successfully
+        // Displaying a success message
+        alert("Change password successfully!");        
         popup.style.display = "none";
-        alert(data.message);
+        // Reloading the page to update the list of students
+        window.location.reload();
       } else {
         // If there is an error, display error message
         document.getElementById("passwordError").textContent = data.error;
