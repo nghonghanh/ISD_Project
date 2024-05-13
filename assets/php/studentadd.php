@@ -86,8 +86,8 @@ if ($studentId === NULL) {
     }
 
     // Chèn thông tin sinh viên vào cơ sở dữ liệu
-    $sql_insert_student = "INSERT INTO student (StudentName, BirthDate, PhoneNumber, StudentEmail) 
-                           VALUES ('$studentName', '$birthDate', '$phoneNumber', '$studentEmail')";
+    $sql_insert_student = "INSERT INTO student (StudentID, StudentName, BirthDate, PhoneNumber, StudentEmail) 
+                           VALUES ('$studentId', '$studentName', '$birthDate', '$phoneNumber', '$studentEmail')";
     if ($conn->query($sql_insert_student) === TRUE) {
 
         // Chèn thông tin phụ huynh vào cơ sở dữ liệu

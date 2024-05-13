@@ -96,10 +96,10 @@
   
     <div class="st-container">
       <div class="st-box">
-        <!-- Student and class information form -->
-        <h3 class="box-content">Contact and Study Information</h3>
+        <!-- Student information form -->
+        <h3 class="box-content">Contact Information</h3>
         <div class="st-form">
-          <form id="editForm">
+          <form id="editContactForm">
             <!-- Input fields for student information -->
             <div class="column">
               <div class="input-box">
@@ -133,8 +133,15 @@
                 <span id="editParentEmailError"></span>
               </div>
             </div>
+          </form>
+        </div>
+      </div>
   
             <!-- Input fields for class information -->
+            <div class="st-box">
+              <h3 class="box-content">Study Information</h3>
+              <div class="st-form">
+                <form id="editStudyForm">
             <div class="column">
               <div class="input-box">
                 <label for="editStudentID">Student ID</label>
@@ -185,9 +192,9 @@
 
   <div class="st-container">
     <div class="st-box">
-      <h3 class="box-content">Contact and Study Information</h3>
+      <h3 class="box-content">Contact Information</h3>
       <div class="st-form">
-        <form id="addForm">
+        <form id="addContactForm">
           <div class="column">
             <!-- Input fields for student information -->
             <div class="input-box">
@@ -221,8 +228,15 @@
               <span id="addParentEmailError"></span>
             </div>
           </div>
+        </form>
+      </div>
+    </div>
 
           <!-- Input fields for class information -->
+          <div class="st-box">
+            <h3 class="box-content">Study Information</h3>
+            <div class="st-form">
+              <form id="addStudyForm">
           <div class="column">
             <div class="input-box">
               <label for="addStudentID">Student ID</label>
@@ -494,8 +508,17 @@ function displayData(row, student) {
 
     // Function to save changes
     function saveChanges() {
-      // Collect form data
-      const formData = new FormData(document.getElementById('editForm'));
+    // Lấy thông tin từ các input
+    const form1 = new FormData(document.getElementById('editContactForm'));
+    const form2 = new FormData(document.getElementById('editStudyForm'));
+    // Gộp thông tin từ hai form lại
+    const formData = new FormData();
+    for (const [key, value] of form1) {
+        formData.append(key, value);
+    }
+    for (const [key, value] of form2) {
+        formData.append(key, value);
+    }
 
       // Send data to studentchange.php
       fetch('assets/php/studentchange.php', {
@@ -539,8 +562,17 @@ function displayData(row, student) {
 
 // Function to save the added student information
 function saveAdd() {
-    // Create FormData object to collect form data
-    const formData = new FormData(document.getElementById('addForm'));
+    // Lấy thông tin từ các input
+    const form1 = new FormData(document.getElementById('addContactForm'));
+    const form2 = new FormData(document.getElementById('addStudyForm'));
+    // Gộp thông tin từ hai form lại
+    const formData = new FormData();
+    for (const [key, value] of form1) {
+        formData.append(key, value);
+    }
+    for (const [key, value] of form2) {
+        formData.append(key, value);
+    }
 
     // Send form data to studentadd.php using fetch API
     fetch('assets/php/studentadd.php', {
@@ -615,6 +647,8 @@ function saveAdd() {
                 .then(data => {
                     if (data.success) {
                         console.log("Deletion successful:", data.message);
+                        // Displaying a success message
+                        alert("Delete student successfully!");
                         // Refresh the page or remove the student row from the table
                         location.reload();
                     } else {

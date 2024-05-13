@@ -15,6 +15,10 @@
   .input-box label {
     font-weight: 600;
   }
+
+  .error-message {
+  color: red;
+  }
 </style>
 </head>
 <body>
@@ -99,45 +103,52 @@
   
     <div class="st-container">
       <div class="st-box">
+        <!-- Test Results information form -->
         <h3 class="box-content">Test Results</h3>
         <div class="performanceForm">
           <form id="performanceForm">
+            <!-- Input fields for Test Results information -->
             <div class="column">
               <div class="input-box">
                 <label>Test 1</label>
-                <input type="text" id="test1Input" placeholder="Loading...">
+                <input type="text" id="test1Input" name="test1Input" placeholder="Loading...">
+                <span id="test1InputError"></span>
               </div>
               <div class="input-box">
                 <label>Test 2</label>
-                <input type="text" id="test2Input" placeholder="Loading...">
+                <input type="text" id="test2Input" name="test2Input" placeholder="Loading...">
+                <span id="test2InputError"></span> 
               </div>
               <div class="input-box">
                 <label>Final</label>
-                <input type="text" id="finalInput" placeholder="Loading...">
+                <input type="text" id="finalInput" name="finalInput" placeholder="Loading...">
+                <span id="finalInputError"></span> 
               </div>
             </div>
           </form>
         </div>
       </div>
-  
-     <div class="st-box">
+   
+      <!-- Input fields for Completion Rate information -->
+      <div class="st-box">
       <h3 class="box-content">Completion Rate</h3>
       <div class="completionForm">
         <form id="completionForm">
           <div class="column">
             <div class="input-box">
               <label>Attendance Rate</label>
-              <input type="text" id="attendanceInput" placeholder="Loading...">
+              <input type="text" id="attendanceInput" name="attendanceInput" placeholder="Loading...">
+              <span id="attendanceInputError"></span> 
             </div>
             <div class="input-box">
               <label>Homework</label>
-              <input type="text" id="homeworkInput" placeholder="Loading...">
+              <input type="text" id="homeworkInput" name="homeworkInput" placeholder="Loading...">
+              <span id="homeworkInputError"></span> 
             </div>
           </div>
         </form>
       </div>
      </div>
-
 
       <div class="column">
         <div class="change-btn" id="saveChangesBtn">Save changes</div>
@@ -245,6 +256,10 @@
           .catch(error => console.error('Error fetching performance data:', error));
       }
 
+    // Khai báo biến toàn cục để lưu studentID và classID
+    let currentStudentId = '';
+    let currentClassId = '';
+
     // Popup functionality for Edit button
     function attachEditEventListeners() {
       const editButtons = document.querySelectorAll(".edit-btn");
@@ -253,12 +268,12 @@
 
       editButtons.forEach(button => {
         button.addEventListener("click", function() {
-          const studentId = this.getAttribute("data-studentid");
-          const classId = this.getAttribute("data-classid");
+          currentStudentId = this.getAttribute("data-studentid");
+          currentClassId = this.getAttribute("data-classid");
           const status = currentStatus; // Lấy giá trị trạng thái hiện tại
 
         // Gửi yêu cầu lấy thông tin sinh viên đến performanceinfor.php
-        fetch(`assets/php/performanceinfor.php?studentId=${studentId}&classId=${classId}&status=${status}`)
+        fetch(`assets/php/performanceinfor.php?studentId=${currentStudentId}&classId=${currentClassId}&status=${status}`)
         .then(response => {
               if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -290,32 +305,59 @@
 
       // Thêm sự kiện lưu thông tin chỉnh sửa khi người dùng nhấn nút "Save changes"
       function saveChanges() {
-        // Lấy thông tin từ các input
-        const form1 = new FormData(document.getElementById('performanceForm'));
-        const form2 = new FormData(document.getElementById('completionForm'));
-        // Gộp thông tin từ hai form lại
-        const formData = {
-          ...Object.fromEntries(form1),
-          ...Object.fromEntries(form2)
-        };
-        // Gửi thông tin chỉnh sửa về server
-        fetch('assets/php/performancechange.php', {
-          method: 'POST',
-          body: JSON.stringify(formData)
+    // Lấy thông tin từ các input
+    const form1 = new FormData(document.getElementById('performanceForm'));
+    const form2 = new FormData(document.getElementById('completionForm'));
+    // Gộp thông tin từ hai form lại
+    const formData = new FormData();
+    for (const [key, value] of form1) {
+        formData.append(key, value);
+    }
+    for (const [key, value] of form2) {
+        formData.append(key, value);
+    }
+    // Thêm studentId và classId vào formData
+    formData.append('studentId', currentStudentId);
+    formData.append('classId', currentClassId);
+    // Gửi thông tin chỉnh sửa về server
+    fetch('assets/php/performancechange.php', {
+        method: 'POST',
+        body: formData
         })
         .then(response => response.json())
         .then(data => {
-          // Xử lý kết quả sau khi lưu
-          console.log('Save result:', data);
-          // Đóng popup sau khi lưu thành công
-          closePopup();
+          console.log(data.message);
+          if (data.success) {
+            // Displaying a success message
+            alert("Edit student performance successfully!");
+
+            // Reloading the page to update the list of students
+            window.location.reload();
+        } else {
+            // Displaying error messages under corresponding labels
+            Object.keys(data.error).forEach(key => {
+                const errorSpan = document.getElementById(key + 'Error');
+                if (errorSpan) {
+                    errorSpan.textContent = data.error[key];
+                    errorSpan.classList.add('error-message'); // Add error-message class
+                }
+            });
+
+            // Remove error messages for fields that are no longer invalid
+            const invalidFields = Object.keys(data.error);
+            const allFieldIds = ['test1InputError', 'test2InputError', 'finalInputError', 'attendanceInputError', 'homeworkInputError'];
+            allFieldIds.forEach(fieldId => {
+                if (!invalidFields.includes(fieldId)) {
+                    const errorSpan = document.getElementById(fieldId + 'Error');
+                    if (errorSpan) {
+                        errorSpan.textContent = '';
+                    }
+                }
+            });
+        }
         })
         .catch(error => console.error('Error saving changes:', error));
-      }
-      function closePopup() {
-        // Đóng cửa sổ popup
-        document.getElementById('open-popup').classList.remove('active');
-      }
+    }
 
     // Function to attach event listeners for Delete button
     function attachDeleteEventListeners() {
