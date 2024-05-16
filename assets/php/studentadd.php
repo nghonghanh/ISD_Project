@@ -61,10 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors['addParentEmail'] = "Please enter no more than 30 characters";
     }
 
-    // Nếu có lỗi, trả về các thông báo lỗi
-    if (!empty($errors)) {
-        echo json_encode(array("success" => false, "error" => $errors));
-        exit;
+    // Kiểm tra tên sinh viên chỉ chứa ký tự chữ và không vượt quá 50 ký tự
+    if (!empty($studentName) && is_numeric($studentName)) {
+        $errors['addStudentName'] = "Student name only accept text";
+    }
+    if (!empty($studentName) && strlen($studentName) > 50) {
+        $errors['addStudentName'] = "Enter up to 50 characters";
     }
 
     // Tìm ID nhỏ nhất không tồn tại trong cơ sở dữ liệu
@@ -76,13 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $row = $result->fetch_assoc();
     $studentId = $row['nextID'];
 
-
     // Nếu không tìm thấy ID nào có thể tái sử dụng, sử dụng ID tiếp theo sau ID lớn nhất hiện tại
-if ($studentId === NULL) {
-    $sql_max_id = "SELECT MAX(StudentID) AS MaxID FROM student";
-    $result = $conn->query($sql_max_id);
-    $row = $result->fetch_assoc();
-    $studentId = $row["MaxID"] + 1;
+    if ($studentId === NULL) {
+        $sql_max_id = "SELECT MAX(StudentID) AS MaxID FROM student";
+        $result = $conn->query($sql_max_id);
+        $row = $result->fetch_assoc();
+        $studentId = $row["MaxID"] + 1;
     }
 
     // Chèn thông tin sinh viên vào cơ sở dữ liệu
@@ -101,12 +102,33 @@ if ($studentId === NULL) {
                 $classId = $_POST[$classIdField];
                 $status = $_POST[$statusField];
 
-                if (!empty($classId) && !empty($status)) {
-                    $sql_insert_class = "INSERT INTO student_class (StudentID, ClassID, Status) 
-                                         VALUES ('$studentId', '$classId', '$status')";
-                    $conn->query($sql_insert_class);
+                // Kiểm tra định dạng ClassID
+                if (!empty($classId) && !preg_match("/^IZ\d{4}$/", $classId)) {
+                    $errors[$classIdField] = "Please enter correct characters for Class ID";
+                }
+
+                // Kiểm tra ClassID có tồn tại trong bảng Class không
+                if (!empty($classId)) {
+                    $sql_check_class = "SELECT * FROM class WHERE ClassID = '$classId'";
+                    $result_check_class = $conn->query($sql_check_class);
+                    if ($result_check_class->num_rows == 0) {
+                        $errors[$classIdField] = "Class ID does not exist";
+                    } else {
+                        // Nếu ClassID hợp lệ, thì thêm vào bảng student_class
+                        if (!empty($status)) {
+                            $sql_insert_class = "INSERT INTO student_class (StudentID, ClassID, Status) 
+                                                 VALUES ('$studentId', '$classId', '$status')";
+                            $conn->query($sql_insert_class);
+                        }
+                    }
                 }
             }
+
+            if (!empty($errors)) {
+                echo json_encode(array("success" => false, "error" => $errors));
+                exit;
+            }
+
             echo json_encode(array("success" => true, "message" => "Student, parent, and class information added successfully"));
         } else {
             echo json_encode(array("success" => false, "error" => "Error adding parent information: " . $conn->error));

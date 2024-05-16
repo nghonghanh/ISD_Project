@@ -256,10 +256,6 @@
           .catch(error => console.error('Error fetching performance data:', error));
       }
 
-    // Khai báo biến toàn cục để lưu studentID và classID
-    let currentStudentId = '';
-    let currentClassId = '';
-
     // Popup functionality for Edit button
     function attachEditEventListeners() {
       const editButtons = document.querySelectorAll(".edit-btn");
@@ -268,12 +264,11 @@
 
       editButtons.forEach(button => {
         button.addEventListener("click", function() {
-          currentStudentId = this.getAttribute("data-studentid");
-          currentClassId = this.getAttribute("data-classid");
-          const status = currentStatus; // Lấy giá trị trạng thái hiện tại
+          const studentId = this.getAttribute("data-studentid");
+          const classId = this.getAttribute("data-classid");
 
         // Gửi yêu cầu lấy thông tin sinh viên đến performanceinfor.php
-        fetch(`assets/php/performanceinfor.php?studentId=${currentStudentId}&classId=${currentClassId}&status=${status}`)
+        fetch(`assets/php/performanceinfor.php?studentId=${studentId}&classId=${classId}`)
         .then(response => {
               if (!response.ok) {
                 throw new Error('Network response was not ok');

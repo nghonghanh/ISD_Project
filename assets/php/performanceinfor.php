@@ -13,27 +13,27 @@ if ($conn->connect_error) {
 }
 
 // Retrieve parameters securely
-$studentId = isset($_GET['studentId']) ? intval($_GET['studentId']) : 0;
-$classId = isset($_GET['classId']) ? intval($_GET['classId']) : 0;
-$status = isset($_GET['status']) ? $conn->real_escape_string($_GET['status']) : '';
+$studentId = $_GET['studentId'];
+$classId = $_GET['classId'];
 
-if ($studentId > 0 && $classId > 0 && !empty($status)) {
-    $stmt = $conn->prepare("SELECT ClassID, Test1, Test2, FinalTest, AttendancePercent, HomeworkPercent FROM student_class WHERE StudentID = ? AND ClassID = ? AND Status = ?");
-    $stmt->bind_param("iis", $studentId, $classId, $status);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql_performance = "SELECT Test1, Test2, FinalTest, AttendancePercent, HomeworkPercent FROM student_class WHERE StudentID = '$studentId' AND ClassID = '$classId'";
+    $result_performance = $conn->query($sql_performance);
 
-    if ($result->num_rows > 0) {
-        $row_performance = $result->fetch_assoc();
-        echo json_encode($row_performance);
+    if ($result_performance->num_rows > 0) {
+        $row_performance = $result_performance->fetch_assoc();
+        $performanceInfo = array(
+            "Test1" => $row_performance['Test1'],
+            "Test2" => $row_performance['Test2'],
+            "FinalTest" => $row_performance['FinalTest'],
+            "AttendancePercent" => $row_performance['AttendancePercent'],
+            "HomeworkPercent" => $row_performance['HomeworkPercent'],
+          );
     } else {
         echo json_encode(["error" => "No performance data found for this student with the specified class and status"]);
+        exit;
     }
 
-    $stmt->close();
-} else {
-    echo json_encode(["error" => "Invalid parameters"]);
-}
+echo json_encode($performanceInfo);
 
 // Close connection
 $conn->close();

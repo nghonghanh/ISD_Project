@@ -18,7 +18,9 @@
 
   .error-message {
   color: red;
-  }
+  font-style: italic;
+  font-size: smaller;
+}
 </style>
 </head>
 <body>
@@ -82,7 +84,7 @@
           <tbody>
             <!-- Dữ liệu sinh viên sẽ được thêm vào đây bằng JavaScript -->
           </tbody>
-        </table>  
+        </table>
       </div>
     </div>
   </div>
@@ -148,26 +150,34 @@
                 <input type="number" id="editStudentID" name="editStudentID" placeholder="Loading..." readonly>
               </div>
               <div class="input-box">
-                <label for="editClassID1">Class ID 1</label>
+                <label for="editClassID1">Class ID Level 3.0-4.0</label>
                 <input type="text" id="editClassID1" name="editClassID1">
+                <span id="editClassID1Error"></span>
+                <br>
                 <label for="editStatus1">Status</label>
                 <input type="text" id="editStatus1" name="editStatus1">
               </div>
               <div class="input-box">
-                <label for="editClassID2">Class ID 2</label>
+                <label for="editClassID2">Class ID Level 4.0-5.0</label>
                 <input type="text" id="editClassID2" name="editClassID2">
+                <span id="editClassID2Error"></span>
+                <br>
                 <label for="editStatus2">Status</label>
                 <input type="text" id="editStatus2" name="editStatus2">
               </div>
               <div class="input-box">
-                <label for="editClassID3">Class ID 3</label>
+                <label for="editClassID3">Class ID Level 5.0-6.0</label>
                 <input type="text" id="editClassID3" name="editClassID3">
+                <span id="editClassID3Error"></span>
+                <br>
                 <label for="editStatus3">Status</label>
                 <input type="text" id="editStatus3" name="editStatus3">
               </div>
               <div class="input-box">
-                <label for="editClassID4">Class ID 4</label>
+                <label for="editClassID4">Class ID Level 6.0-7.0</label>
                 <input type="text" id="editClassID4" name="editClassID4">
+                <span id="editClassID4Error"></span>
+                <br>
                 <label for="editStatus4">Status</label>
                 <input type="text" id="editStatus4" name="editStatus4">
               </div>
@@ -243,26 +253,34 @@
               <input type="number" id="addStudentID" name="addStudentID" placeholder="Auto generate..." readonly>
             </div>
             <div class="input-box">
-              <label for="addClassID1">Class ID 1</label>
+              <label for="addClassID1">Class ID Level 3.0-4.0</label>
               <input type="text" id="addClassID1" name="addClassID1" placeholder="Input here...">
+              <span id="addClassID1Error"></span>
+              <br>
               <label for="addStatus1">Status</label>
               <input type="text" id="addStatus1" name="addStatus1" placeholder="Input here...">
             </div>
             <div class="input-box">
-              <label for="addClassID2">Class ID 2</label>
+              <label for="addClassID2">Class ID Level 4.0-5.0</label>
               <input type="text" id="addClassID2" name="addClassID2" placeholder="Input here...">
+              <span id="addClassID2Error"></span>
+              <br>
               <label for="addStatus2">Status</label>
               <input type="text" id="addStatus2" name="addStatus2" placeholder="Input here...">
             </div>
             <div class="input-box">
-              <label for="addClassID3">Class ID 3</label>
+              <label for="addClassID3">Class ID Level 5.0-6.0</label>
               <input type="text" id="addClassID3" name="addClassID3" placeholder="Input here...">
+              <span id="addClassID3Error"></span>
+              <br>
               <label for="addStatus3">Status</label>
               <input type="text" id="addStatus3" name="addStatus3" placeholder="Input here...">
             </div>
             <div class="input-box">
-              <label for="addClassID4">Class ID 4</label>
+              <label for="addClassID4">Class ID Level 6.0-7.0</label>
               <input type="text" id="addClassID4" name="addClassID4" placeholder="Input here...">
+              <span id="addClassID4Error"></span>
+              <br>
               <label for="addStatus4">Status</label>
               <input type="text" id="addStatus4" name="addStatus4" placeholder="Input here...">
             </div>
@@ -453,58 +471,58 @@ function displayData(row, student) {
 
     }
 
-    // Popup functionality for Edit button
-    function attachEditEventListeners() {
-      const editButtons = document.querySelectorAll(".edit-btn");
-      const editPopup = document.getElementById("open-popup");
-      const cancelEditButton = editPopup.querySelector(".close-menu");
+// Popup functionality for Edit button
+function attachEditEventListeners() {
+  const editButtons = document.querySelectorAll(".edit-btn");
+  const editPopup = document.getElementById("open-popup");
+  const cancelEditButton = editPopup.querySelector(".close-menu");
 
-      editButtons.forEach(button => {
-        button.addEventListener("click", function() {
-          const studentId = this.getAttribute("data-studentid");
+  editButtons.forEach(button => {
+    button.addEventListener("click", function() {
+      const studentId = this.getAttribute("data-studentid");
 
-          // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
-          fetch(`assets/php/studentinfor.php?id=${studentId}`)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            })
-            .then(data => {
-              // Đổ dữ liệu vào form chỉnh sửa
-              document.getElementById('editStudentName').value = data.StudentName;
-              document.getElementById('editDOB').value = data.BirthDate;
-              document.getElementById('editPhone').value = data.PhoneNumber;
-              document.getElementById('editEmail').value = data.StudentEmail;
-              document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
-              document.getElementById('editParentEmail').value = data.ParentEmail;
-              document.getElementById('editStudentID').value = studentId;
+      // Gửi yêu cầu lấy thông tin sinh viên tương ứng với StudentID
+      fetch(`assets/php/studentinfor.php?id=${studentId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Đổ dữ liệu vào form chỉnh sửa
+          document.getElementById('editStudentName').value = data.StudentName;
+          document.getElementById('editDOB').value = data.BirthDate;
+          document.getElementById('editPhone').value = data.PhoneNumber;
+          document.getElementById('editEmail').value = data.StudentEmail;
+          document.getElementById('editParentPhone').value = data.ParentPhoneNumber;
+          document.getElementById('editParentEmail').value = data.ParentEmail;
+          document.getElementById('editStudentID').value = studentId;
 
-              // Hiển thị thông tin ClassID và Status tương ứng vào các label
-              document.getElementById('editClassID1').value = data.ClassID3 ? data.ClassID3 : '';
-              document.getElementById('editStatus1').value = data.Status3 ? data.Status3 : '';
-              document.getElementById('editClassID2').value = data.ClassID5 ? data.ClassID5 : '';
-              document.getElementById('editStatus2').value = data.Status5 ? data.Status5 : '';
-              document.getElementById('editClassID3').value = data.ClassID7 ? data.ClassID7 : '';
-              document.getElementById('editStatus3').value = data.Status7 ? data.Status7 : '';
-              document.getElementById('editClassID4').value = data.ClassID9 ? data.ClassID9 : '';
-              document.getElementById('editStatus4').value = data.Status9 ? data.Status9 : '';
+          // Hiển thị thông tin ClassID và Status tương ứng vào các label
+          document.getElementById('editClassID1').value = data["ClassID3.0-4.0"] || '';
+          document.getElementById('editStatus1').value = data["Status3.0-4.0"] || '';
+          document.getElementById('editClassID2').value = data["ClassID4.0-5.0"] || '';
+          document.getElementById('editStatus2').value = data["Status4.0-5.0"] || '';
+          document.getElementById('editClassID3').value = data["ClassID5.0-6.0"] || '';
+          document.getElementById('editStatus3').value = data["Status5.0-6.0"] || '';
+          document.getElementById('editClassID4').value = data["ClassID6.0-7.0"] || '';
+          document.getElementById('editStatus4').value = data["Status6.0-7.0"] || '';
 
-              // Hiển thị popup chỉnh sửa
-              editPopup.style.display = "block";
-            })
-            .catch(error => {
-              console.error('Error fetching student data:', error); // Xử lý lỗi
-            });
+          // Hiển thị popup chỉnh sửa
+          editPopup.style.display = "block";
+        })
+        .catch(error => {
+          console.error('Error fetching student data:', error); // Xử lý lỗi
         });
-      });
+    });
+  });
 
-      // Sự kiện cho nút đóng popup
-      cancelEditButton.addEventListener("click", function() {
-        editPopup.style.display = "none";
-      });
-    }
+  // Đóng popup chỉnh sửa khi nhấn nút hủy
+  cancelEditButton.addEventListener("click", function() {
+    editPopup.style.display = "none";
+  });
+}
 
     // Function to save changes
     function saveChanges() {
@@ -546,7 +564,7 @@ function displayData(row, student) {
 
             // Remove error messages for fields that are no longer invalid
             const invalidFields = Object.keys(data.error);
-            const allFieldIds = ['editStudentName', 'editDOB', 'editPhone', 'editEmail', 'editParentPhone', 'editParentEmail'];
+            const allFieldIds = ['editStudentName', 'editDOB', 'editPhone', 'editEmail', 'editParentPhone', 'editParentEmail', 'editClassID1', 'editClassID2', 'editClassID3', 'editClassID4'];
             allFieldIds.forEach(fieldId => {
                 if (!invalidFields.includes(fieldId)) {
                     const errorSpan = document.getElementById(fieldId + 'Error');
@@ -600,7 +618,7 @@ function saveAdd() {
 
             // Remove error messages for fields that are no longer invalid
             const invalidFields = Object.keys(data.error);
-            const allFieldIds = ['addStudentName', 'addDOB', 'addPhone', 'addEmail', 'addParentPhone', 'addParentEmail'];
+            const allFieldIds = ['addStudentName', 'addDOB', 'addPhone', 'addEmail', 'addParentPhone', 'addParentEmail', 'addClassID1', 'addClassID2', 'addClassID3', 'addClassID4'];
             allFieldIds.forEach(fieldId => {
                 if (!invalidFields.includes(fieldId)) {
                     const errorSpan = document.getElementById(fieldId + 'Error');

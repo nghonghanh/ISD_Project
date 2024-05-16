@@ -43,7 +43,7 @@ if ($result_student->num_rows > 0) {
 }
 
 // Fetch class information for each level
-$levels = array(3, 5, 7, 9);
+$levels = array('3.0-4.0', '4.0-5.0', '5.0-6.0', '6.0-7.0');
 $classInfo = array();
 foreach ($levels as $level) {
   $sql_class = "SELECT c.ClassID, sc.Status FROM class c

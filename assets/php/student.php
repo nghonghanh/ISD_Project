@@ -25,7 +25,7 @@ if (isset($_GET['search'])) {
     // Nếu thông tin tìm kiếm không rỗng
     if (!empty($search)) {
         // Tạo điều kiện tìm kiếm dựa trên tên sinh viên
-        $sql .= " WHERE LOWER(student.StudentID) LIKE '%$search%' OR LOWER(student.StudentName) LIKE '%$search%' OR LOWER(student.StudentEmail) LIKE '%$search%'";
+        $sql .= " WHERE LOWER(student.StudentID) LIKE '%$search%' OR LOWER(student.StudentName) LIKE '%$search%'";
     }
 }
 
