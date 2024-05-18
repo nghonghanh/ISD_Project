@@ -45,7 +45,7 @@
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="class.html">
             <div>CLASS</div>
           </a>
         </li>
@@ -74,7 +74,7 @@
         </div>
 
         <!-- Bảng danh sách performance -->
-        <table class="student-table" id="studentData">
+        <table class="student-table" id="performanceData">
           <thead>
             <tr>
               <th>Student ID</th>
@@ -107,7 +107,7 @@
       <div class="st-box">
         <!-- Test Results information form -->
         <h3 class="box-content">Test Results</h3>
-        <div class="performanceForm">
+        <div class="st-form">
           <form id="performanceForm">
             <!-- Input fields for Test Results information -->
             <div class="column">
@@ -134,7 +134,7 @@
       <!-- Input fields for Completion Rate information -->
       <div class="st-box">
       <h3 class="box-content">Completion Rate</h3>
-      <div class="completionForm">
+      <div class="st-form">
         <form id="completionForm">
           <div class="column">
             <div class="input-box">
@@ -225,7 +225,7 @@
         fetch(url)
           .then(response => response.json())
           .then(data => {
-            const performanceTable = document.getElementById('studentData');
+            const performanceTable = document.getElementById('performanceData');
             const tbody = performanceTable.querySelector('tbody');
             tbody.innerHTML = '';
   
