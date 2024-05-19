@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Chuẩn bị câu truy vấn mặc định
-$sql = "SELECT class.ClassID, class.Level, class.Teacher, class.OpeningDay, class.EndingDay
+$sql = "SELECT DISTINCT class.ClassID, class.Level, class.Teacher, class.OpeningDay, class.EndingDay
         FROM class
         INNER JOIN student_class ON class.ClassID = student_class.ClassID";
 

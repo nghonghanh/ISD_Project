@@ -112,17 +112,17 @@
             <!-- Input fields for Test Results information -->
             <div class="column">
               <div class="input-box">
-                <label>Test 1</label>
+                <label for="test1Input">Test 1</label>
                 <input type="text" id="test1Input" name="test1Input" placeholder="Loading...">
                 <span id="test1InputError"></span>
               </div>
               <div class="input-box">
-                <label>Test 2</label>
+                <label for="test2Input">Test 2</label>
                 <input type="text" id="test2Input" name="test2Input" placeholder="Loading...">
                 <span id="test2InputError"></span> 
               </div>
               <div class="input-box">
-                <label>Final</label>
+                <label for="finalInput">Final</label>
                 <input type="text" id="finalInput" name="finalInput" placeholder="Loading...">
                 <span id="finalInputError"></span> 
               </div>
@@ -138,13 +138,13 @@
         <form id="completionForm">
           <div class="column">
             <div class="input-box">
-              <label>Attendance Rate</label>
-              <input type="text" id="attendanceInput" name="attendanceInput" placeholder="Loading...">
+              <label for="attendanceInput">Attendance Rate</label>
+              <input type="text" id="attendanceInput" name="attendanceInput" placeholder="/30">
               <span id="attendanceInputError"></span> 
             </div>
             <div class="input-box">
-              <label>Homework</label>
-              <input type="text" id="homeworkInput" name="homeworkInput" placeholder="Loading...">
+              <label for="homeworkInput">Homework</label>
+              <input type="text" id="homeworkInput" name="homeworkInput" placeholder="/30">
               <span id="homeworkInputError"></span> 
             </div>
           </div>
@@ -258,6 +258,10 @@
           .catch(error => console.error('Error fetching performance data:', error));
       }
 
+    // Khai báo biến toàn cục để lưu studentID và classID
+    let currentStudentId = '';
+    let currentClassId = '';
+
     // Popup functionality for Edit button
     function attachEditEventListeners() {
       const editButtons = document.querySelectorAll(".edit-btn");
@@ -284,6 +288,7 @@
             document.getElementById('finalInput').value = data.FinalTest;
             document.getElementById('attendanceInput').value = data.AttendancePercent;
             document.getElementById('homeworkInput').value = data.HomeworkPercent;
+            
               
             // Hiển thị popup chỉnh sửa
               editPopup.style.display = "block"; 
