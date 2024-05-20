@@ -148,7 +148,6 @@
       </div>
     </div>
 
-   
     <div class="column">
       <!-- Save changes button -->
       <div class="change-btn" id="saveChangesBtn">Save changes</div>
@@ -197,8 +196,8 @@
             </div>
           </div>
         </form>
-  </div>
-</div>
+      </div>
+    </div>
 
     <div class="column">
       <!-- Save add button -->
@@ -207,35 +206,53 @@
   </div>
 </div>
 
-<!-- Popup for deleting class information -->
-<div id="open-popup-delete" class="change-popup">
+<!-- Popup for displaying student info -->
+<div id="student-popup" class="open-popup" style="display: none;">
   <div class="popup-title">
-    <h2>Delete Class</h2>
+    <h2>Student List</h2>
+    <p class="close-menu">X</p>
   </div>
   <div class="st-container">
     <div class="st-box">
-      <h3 class="box-content">Are you sure to delete this class?</h3>
-    </div>
-    <div class="column">
-      <div class="delete-btn" id="confirmDeleteBtn">Save</div>
-      <div class="cancel-btn" id="cancelDeleteBtn">Cancel</div>
+      <div class="st-form">
+        <table id="student-table">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Phone Number</th>
+              <th>Student Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Student info will be inserted here -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Popup for deleting student information -->
-<div id="open-popup-delete-student" class="change-popup">
-  <div class="popup-title">
-    <h2>Delete Student</h2>
+<!-- Delete Class Popup -->
+<div id="open-popup-delete-class" class="change-popup" style="display: none;">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup('open-popup-delete-class')">&times;</span>
+    <h2>Delete Class</h2>
+    <p>Are you sure you want to delete this class?</p>
+    <button class="save-btn" onclick="deleteClass()">Save</button>
+    <button class="cancel-btn" onclick="closePopup('open-popup-delete-class')">Cancel</button>
   </div>
-  <div class="st-container">
-    <div class="st-box">
-      <h3 class="box-content">Are you sure to delete this student?</h3>
-    </div>
-    <div class="column">
-      <div class="delete-btn" id="confirmDeleteBtnStu">Save</div>
-      <div class="cancel-btn" id="cancelDeleteBtnStu">Cancel</div>
-    </div>
+</div>
+
+<!-- Delete Student Popup -->
+<div id="open-popup-delete-student" class="change-popup" style="display: none;">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup('open-popup-delete-student')">&times;</span>
+    <h2>Delete Student</h2>
+    <p>Are you sure you want to delete this student?</p>
+    <button class="save-btn" onclick="deleteStudent()">Save</button>
+    <button class="cancel-btn" onclick="closePopup('open-popup-delete-Student')">Cancel</button>
   </div>
 </div>
 
@@ -273,8 +290,8 @@ document.addEventListener("DOMContentLoaded", function() {
     saveAdd();
   });
 
-      // Gắn sự kiện cho nút Add
-      attachAddEventListeners();
+  // Gắn sự kiện cho nút Add
+  attachAddEventListeners();
 
   function searchClass() {
     const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -311,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function() {
           `;
           tbody.appendChild(row);
         });
-
+        attachListEventListeners();
         attachEditEventListeners();
         attachDeleteEventListeners();
       })
@@ -382,63 +399,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  function attachDeleteEventListeners() {
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const classId = this.getAttribute("data-classid");
-            const confirmation = confirm("Are you sure you want to delete this class?");
-            if (confirmation) {
-                fetch(`assets/php/classdelete.php?classId=${classId}`, { method: 'GET' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Class deleted successfully');
-                        getClassData(currentStatus);
-                    } else {
-                        alert('Error deleting class: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error deleting class:', error);
-                });
-            }
-        });
-    });
-  }
+  // Popup functionality for Add button
+  function attachAddEventListeners() {
+    const addButton = document.querySelector(".add-btn");
+    const addPopup = document.getElementById("open-popup-add");
+    const cancelAddButton = addPopup.querySelector(".close-add-menu");
 
-      // Popup functionality for Add button
-      function attachAddEventListeners() {
-      const addButton = document.querySelector(".add-btn");
-      const addPopup = document.getElementById("open-popup-add");
-      const cancelAddButton = addPopup.querySelector(".close-add-menu");
+    if (!addPopup) {
+      console.error("Popup element not found. Check if the selector is correct.");
+      return;
+    }
 
-      if (!addPopup) {
-        console.error("Popup element not found. Check if the selector is correct.");
-        return;
-      }
+    if (!cancelAddButton) {
+      console.error("Close button for popup not found. Check if the selector is correct.");
+      return;
+    }
 
-      if (!cancelAddButton) {
-        console.error("Close button for popup not found. Check if the selector is correct.");
-        return;
-      }
-
-      // Sự kiện cho nút "Add"
-      addButton.addEventListener("click", function() {
+    // Sự kiện cho nút "Add"
+    addButton.addEventListener("click", function() {
       // Ẩn tất cả các popup khác trước khi hiển thị popup thêm mới
       document.querySelectorAll('.open-popup').forEach(popup => {
-      popup.style.display = "none";
-    });
+        popup.style.display = "none";
+      });
       addPopup.style.display = "block";
     });
 
-      // Sự kiện cho nút đóng Addpopup
-      cancelAddButton.addEventListener("click", function() {
-        addPopup.style.display = "none";
-        window.location.reload();
-      });
-
-    }
+    // Sự kiện cho nút đóng Addpopup
+    cancelAddButton.addEventListener("click", function() {
+      addPopup.style.display = "none";
+      window.location.reload();
+    });
+  }
 
   // Function to save new class
   function saveAdd() {
@@ -461,7 +452,7 @@ document.addEventListener("DOMContentLoaded", function() {
         alert(data.message);
         // Reset form và ẩn popup
         form.reset();
-        popup.classList.remove("open-popup");
+        document.getElementById("open-popup-add").style.display = "none";
       } else {
         // Hiển thị thông báo lỗi
         for (const [key, value] of Object.entries(data.error)) {
@@ -485,11 +476,122 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  function attachListEventListeners() {
+    const listButtons = document.querySelectorAll('.list-btn');
+    const listPopup = document.getElementById("student-popup");
+    const cancellistButton = listPopup.querySelector(".close-menu");
 
+    listButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const classId = this.getAttribute('data-classid');
+            listPopup.style.display = "block";
+
+            fetch(`assets/php/class-student.php?classid=${classId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const studentTable = document.getElementById('student-table');
+                    const tbody = studentTable.querySelector('tbody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(student => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                          <td>${student.StudentID}</td>
+                          <td>${student.StudentName}</td>
+                          <td>${student.PhoneNumber}</td>
+                          <td>${student.StudentEmail}</td>
+                          <td>
+                            <button class="search-btn delete-student-btn" data-studentid="${student.StudentID}">Delete</button>
+                          </td>
+                          `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Attach event for newly created Delete buttons
+                    attachDeleteStudentEventListeners();
+
+                })
+                .catch(error => console.error('Error fetching student data:', error));
+        });
+    });
+}
+
+
+  function attachDeleteEventListeners() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const classId = this.getAttribute('data-classid');
+        if (confirm('Are you sure you want to delete this class?')) {
+          deleteClass(classId);
+        }
+      });
+    });
+  }
+
+  function attachDeleteStudentEventListeners() {
+    const deleteStudentButtons = document.querySelectorAll('.delete-student-btn');
+    deleteStudentButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const studentId = this.getAttribute('data-studentid');
+        if (confirm('Are you sure you want to delete this student?')) {
+          deleteStudent(studentId);
+        }
+      });
+    });
+  }
+
+  function deleteClass(classId) {
+    fetch(`assets/php/classdelete.php?classid=${classId}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Class deleted successfully');
+          getClassData(currentStatus);
+        } else {
+          alert('Error deleting class: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  function deleteStudent(studentId) {
+    fetch(`assets/php/class-studentdelete.php?studentid=${studentId}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Student deleted successfully');
+          // Optionally refresh the student list
+          const classId = document.querySelector('.list-btn[data-classid]').getAttribute('data-classid');
+          listStudents(classId);
+        } else {
+          alert('Error deleting student: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  // Function to close the popup
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+  }
+
+  // Ensure close button works
+  const closeButtons = document.querySelectorAll('.close-menu');
+  closeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const popupId = this.closest('.open-popup').id;
+      closePopup(popupId);
+    });
+  });
 });
 
-</script>
-
+  </script>
 </body>
 </html>
 
