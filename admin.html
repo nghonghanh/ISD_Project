@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>IZONE Institute</title>
+<title>IZONE Institutes</title>
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,24 +25,30 @@
       <li>
         <a href="student.html">
           <div>STUDENT</div>
-        </a>
+        </a>  
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="performance.html">
           <div>PERFORMANCE</div>
         </a>
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="class.html">
           <div>CLASS</div>
         </a>
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="admin.html">
           <div>ADMIN</div>
         </a>
       </li>
-    </ul>
+    </ul><hr/>
   </div>
   <div class="main">
     <div class="main-title">
@@ -74,10 +80,10 @@
       </form>
     </div>
   </div>
-</div>
-
+    
 <!-- Popup -->
-<div id="popup" class="popup" style="display: none;">
+<div id="popup" class="modal-container" style="display: none;">
+  <div class="popup">
   <h2>Change Password</h2>
   <form id="changePasswordForm">
     <div class="input-box">
@@ -98,8 +104,11 @@
     </div>
     <div class="error" id="passwordError" style="display: none;"></div>
   </form>
+  </div>
 </div>
 <!-- End Popup -->
+</div>
+
 
 <!-- Script for Popup -->
 <script>

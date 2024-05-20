@@ -6,6 +6,7 @@
 <title>IZONE Institute</title>
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/font_icon/themify-icons-font/themify-icons/themify-icons.css">
 <style>
   .main {
     height: auto;
@@ -37,35 +38,42 @@
         <li>
           <a href="student.html">
             <div>STUDENT</div>
-          </a>
+          </a>  
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="performance.html">
             <div>PERFORMANCE</div>
           </a>
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="class.html">
             <div>CLASS</div>
           </a>
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="admin.html">
             <div>ADMIN</div>
           </a>
         </li>
-      </ul>
+      </ul><hr/>
     </div>
     <div class="main">
 
       <!-- Thanh tìm kiếm -->
       <div class="st-title">
         <div class="header">
-          <h2>Student List</h2>
+          <h2>Student List
           <div class="box">
             <button type="button" class="search-btn add-btn">Add</button>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search">
           </div>
+          </h2>
         </div>
 
         <!-- Bảng danh sách học sinh -->
@@ -92,14 +100,16 @@
   <!-- Popup for editing student information -->
   <div id="open-popup" class="open-popup">
     <div class="popup-title">
-      <h2>Student Information</h2>
-      <p class="close-menu">X</p>
+      <h2>Student Information
+      <i class="close-menu ti-close"></i>
+      </h2>
     </div>
+    <hr/>
   
     <div class="st-container">
       <div class="st-box">
         <!-- Student information form -->
-        <h3 class="box-content">Contact Information</h3>
+        <h3 class="box-content">Contact Information</h3><hr/>
         <div class="st-form">
           <form id="editContactForm">
             <!-- Input fields for student information -->
@@ -141,7 +151,7 @@
   
             <!-- Input fields for class information -->
             <div class="st-box">
-              <h3 class="box-content">Study Information</h3>
+              <h3 class="box-content">Study Information</h3><hr/>
               <div class="st-form">
                 <form id="editStudyForm">
             <div class="column">
@@ -196,13 +206,15 @@
 <!-- Popup for adding student information -->
 <div id="open-popup-add" class="open-popup">
   <div class="popup-title">
-    <h2>Student Information</h2>
-    <p class="close-add-menu">X</p>
+    <h2>Student Information
+    <i class="close-menu ti-close"></i>
+    </h2>
   </div>
+  <hr/>
 
   <div class="st-container">
     <div class="st-box">
-      <h3 class="box-content">Contact Information</h3>
+      <h3 class="box-content">Contact Information</h3><hr/>
       <div class="st-form">
         <form id="addContactForm">
           <div class="column">
@@ -244,7 +256,7 @@
 
           <!-- Input fields for class information -->
           <div class="st-box">
-            <h3 class="box-content">Study Information</h3>
+            <h3 class="box-content">Study Information</h3><hr/>
             <div class="st-form">
               <form id="addStudyForm">
           <div class="column">

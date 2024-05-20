@@ -45,7 +45,7 @@
 }
 
 .sidebar ul {
-  margin-top: 15px;
+  margin-top: 5px;
   margin-left: 20px;
 }
 
@@ -62,6 +62,8 @@
   display: flex;
   align-items: center;
   opacity: 0.6;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .sidebar ul li a:hover{
@@ -131,13 +133,22 @@
   border:rgb(219, 8, 41);
 }
 
+.modal-container {
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .popup {
   width: 300px;
   background-color: ghostwhite;
   border-radius: 6px;
   position: absolute;
   top: 20%;
-  left: 50%;
+  left: 45%;
   padding: 30px 30px;
   transition: transform 0.4s, top 0.4s;
 }
@@ -204,7 +215,11 @@
   
 }
 
-.box .search-btn {
+.st-title .box {
+  float: right;
+}
+
+.box .setnamehere-btn {
   padding: 3px 18px;
   color: white;
   background-color: #db0829;
@@ -247,12 +262,12 @@
   color: #333;
   display: none;
   left: 290px;
-  background-color: rgb(220, 220, 220);
+  background-color: #f9f9f9;
   height: 100%;
+  backdrop-filter: grey;
 }
 
 .open-popup .h2 {
-  
   font-size: 16px;
 }
 
@@ -268,6 +283,13 @@
   
 }
 
+.close-menu {
+  float: right;
+  font-size: 16px;
+  color: #707070;
+  cursor: pointer;
+}
+
 .st-container {
   margin: 34px 34px;
 
@@ -280,7 +302,7 @@
 }
 
 .st-box .box-content {
-  padding: 17px 17px 0 17px;
+  padding: 17px;
   font-size: 16px;
 }
 
@@ -306,30 +328,4 @@
 
 .select-btn:hover {
   color: #db0829;
-}
-
-/* Styles for delete popup */
-#open-popup-delete {
-  width: 300px;
-  background-color: ghostwhite;
-  border-radius: 6px;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  padding: 30px 30px;
-  transition: transform 0.4s, top 0.4s;
-  display: none; /* Thêm dòng này để ẩn popup ban đầu */
-}
-
-.change-popup .delete-btn,
-.change-popup .cancel-btn {
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  background-color: rgba(219, 8, 41, 1);
-  padding: 8px 33px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: rgb(219, 8, 41);
-  width: 50%;
 }

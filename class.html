@@ -6,6 +6,7 @@
 <title>IZONE Institute</title>
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/font_icon/themify-icons-font/themify-icons/themify-icons.css">
 <style>
 .main {
   height: auto;
@@ -42,24 +43,30 @@
       <li>
         <a href="student.html">
           <div>STUDENT</div>
-        </a>
+        </a>  
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="performance.html">
           <div>PERFORMANCE</div>
         </a>
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="class.html">
           <div>CLASS</div>
         </a>
       </li>
+    </ul><hr/>
+    <ul>
       <li>
         <a href="admin.html">
           <div>ADMIN</div>
         </a>
       </li>
-    </ul>
+    </ul><hr/>
   </div>
   <div class="main">
     <!-- Thanh tìm kiếm -->
@@ -70,11 +77,12 @@
   
     <div class="st-title">
       <div class="header">
-        <h2>Class List</h2>
+        <h2>Class List
         <div class="box">
           <button type="button" class="search-btn add-btn">Add</button>
-          <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search">
         </div>
+        </h2>
       </div>
     <!-- Bảng danh sách học sinh -->
      
@@ -84,8 +92,8 @@
           <th>Class ID</th>
           <th>Level</th>
           <th>Teacher</th>
-          <th>Opening Day</th>
-          <th>Ending Day</th>
+          <th>Start Date</th>
+          <th>End Date</th>
           <th>Student</th>
           <th>Function</th>
         </tr>
@@ -101,13 +109,15 @@
 <!-- Popup for editing class information -->
 <div id="open-popup" class="open-popup">
   <div class="popup-title">
-  <h2>Class</h2>
-  <p class="close-menu">X</p>
+  <h2>Class
+  <i class="close-menu ti-close"></i>
+  </h2>
   </div>
+  <hr/>
 
   <div class="st-container">
     <div class="st-box">
-      <h3 class="box-content">Class Information</h3>
+      <h3 class="box-content">Class Information</h3><hr/>
       <div class="st-form">
         <form id="editclassForm">
           <div class="column">
@@ -134,12 +144,12 @@
 
           <div class="column">
             <div class="input-box">
-              <label for="editOpeningDay">Opening Day</label>
+              <label for="editOpeningDay">Start Date</label>
               <input type="date" id="editOpeningDay" name="editOpeningDay" placeholder="Loading...">
               <div id="editOpeningDayError" class="error-message"></div>
             </div>
             <div class="input-box">
-              <label for="editEndingDay">Ending Day:</label>
+              <label for="editEndingDay">End Date</label>
               <input type="date" id="editEndingDay" name="editEndingDay" placeholder="Loading...">
               <div id="editEndingDayError" class="error-message"></div>
             </div>
@@ -158,12 +168,14 @@
 <!-- Popup for adding class information -->
 <div id="open-popup-add" class="open-popup">
   <div class="popup-title">
-    <h2>Add Class</h2>
-    <p class="close-add-menu">X</p>
+    <h2>Add Class
+    <i class="close-menu ti-close"></i>
+    </h2>
   </div>
+  <hr/>
   <div class="st-container">
     <div class="st-box">
-      <h3 class="box-content">Class Information</h3>
+      <h3 class="box-content">Class Information</h3><hr/>
       <div class="st-form">
         <form id="addclassForm">
           <div class="column">
@@ -185,12 +197,12 @@
           </div>
           <div class="column">
             <div class="input-box">
-              <label for="addOpeningDay">Opening Day</label>
+              <label for="addOpeningDay">Start Date</label>
               <input type="date" id="addOpeningDay" name="addOpeningDay">
               <div id="addOpeningDayError" class="error-message"></div>
             </div>
             <div class="input-box">
-              <label for="addEndingDay">Ending Day:</label>
+              <label for="addEndingDay">End Date</label>
               <input type="date" id="addEndingDay" name="addEndingDay">
               <div id="addEndingDayError" class="error-message"></div>
             </div>
@@ -209,9 +221,12 @@
 <!-- Popup for displaying student info -->
 <div id="student-popup" class="open-popup" style="display: none;">
   <div class="popup-title">
-    <h2>Student List</h2>
-    <p class="close-menu">X</p>
+    <h2>Student List
+    <i class="close-menu ti-close"></i>
+    </h2>
   </div>
+  <hr/>
+  
   <div class="st-container">
     <div class="st-box">
       <div class="st-form">

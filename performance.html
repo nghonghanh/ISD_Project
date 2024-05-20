@@ -6,6 +6,7 @@
 <title>IZONE Institute</title>
 <!-- Custom CSS -->
 <link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/css/home.css">
+<link rel="stylesheet" href="http://127.0.0.1/ISD_Project/assets/font_icon/themify-icons-font/themify-icons/themify-icons.css">
 <style>
   .main {
     height: auto;
@@ -37,24 +38,30 @@
         <li>
           <a href="student.html">
             <div>STUDENT</div>
-          </a>
+          </a>  
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="performance.html">
             <div>PERFORMANCE</div>
           </a>
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="class.html">
             <div>CLASS</div>
           </a>
         </li>
+      </ul><hr/>
+      <ul>
         <li>
           <a href="admin.html">
             <div>ADMIN</div>
           </a>
         </li>
-      </ul>
+      </ul><hr/>
     </div>
     <div class="main">
 
@@ -66,11 +73,12 @@
 
       <div class="st-title">
         <div class="header">
-          <h2>Student Performance</h2>
+          <h2>Student Performance
           <div class="box">
             <button type="button" class="search-btn add-btn" id="searchBtn">Add</button>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search...">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search">
           </div>
+          </h2>
         </div>
 
         <!-- Bảng danh sách performance -->
@@ -99,14 +107,16 @@
   <!-- Popup for editing student performance -->
 <div id="open-popup" class="open-popup">
     <div class="popup-title">
-    <h2>Student Performance</h2>
-    <p class="close-menu">X</p>
+    <h2>Student Performance
+    <i class="close-menu ti-close"></i>
+    </h2>
     </div>
+    <hr/>
   
     <div class="st-container">
       <div class="st-box">
         <!-- Test Results information form -->
-        <h3 class="box-content">Test Results</h3>
+        <h3 class="box-content">Test Results</h3><hr/>
         <div class="st-form">
           <form id="performanceForm">
             <!-- Input fields for Test Results information -->
@@ -133,7 +143,7 @@
    
       <!-- Input fields for Completion Rate information -->
       <div class="st-box">
-      <h3 class="box-content">Completion Rate</h3>
+      <h3 class="box-content">Completion Rate</h3><hr/>
       <div class="st-form">
         <form id="completionForm">
           <div class="column">
